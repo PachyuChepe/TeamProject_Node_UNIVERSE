@@ -1,6 +1,7 @@
 // app.js
 
 const express = require("express");
+const path = require("path");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
@@ -50,9 +51,12 @@ app.use(
 
 // app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(apiSpec));
 
+// 정적 파일 디렉토리 설정
+app.use(express.static("front.views"));
+
 // 기본 경로 설정
 app.get("/", (req, res) => {
-  res.send("안녕하세요 세계!");
+  res.sendFile(path.join(__dirname, "front.views", "index.html"));
 });
 
 // 서버 생성 및 실행
