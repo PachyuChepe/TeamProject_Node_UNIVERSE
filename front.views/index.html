@@ -3,7 +3,36 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>뉴스피드 프로젝트</title>
+    <link rel="stylesheet" href="../front.public/style.css" />
   </head>
-  <body></body>
+  <body>
+    <div id="app">
+      <!-- 로그인 및 회원가입 폼 -->
+      <div id="auth-form">
+        <input type="text" id="username" placeholder="Username" />
+        <input type="password" id="password" placeholder="Password" />
+        <button id="login-btn">Login</button>
+        <button id="signup-btn">Sign Up</button>
+      </div>
+
+      <!-- 프로필 관리 -->
+      <div id="profile-management" style="display: none">
+        <input type="text" id="name" placeholder="Name" />
+        <textarea id="bio" placeholder="Bio"></textarea>
+        <button id="update-profile-btn">Update Profile</button>
+      </div>
+
+      <!-- 게시물 작성 폼 -->
+      <div id="post-form" style="display: none">
+        <textarea id="post-content" placeholder="Write a post..."></textarea>
+        <button id="post-btn">Post</button>
+      </div>
+
+      <!-- 게시물 목록 -->
+      <div id="posts"></div>
+    </div>
+
+    <script src="../front.public/pulic.index.js"></script>
+  </body>
 </html>
