@@ -9,11 +9,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       models.Follow.belongsTo(models.User, {
-        foreignKey: "userId",
+        as: "Follower",
+        foreignKey: "follower",
         targetKey: "id",
       });
+
       models.Follow.belongsTo(models.User, {
-        foreignKey: "userId",
+        as: "Following",
+        foreignKey: "following",
         targetKey: "id",
       });
     }
