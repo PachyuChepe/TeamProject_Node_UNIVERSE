@@ -27,7 +27,13 @@ module.exports = (sequelize, DataTypes) => {
         sourceKey: "id",
       });
       models.User.hasMany(models.Follow, {
-        foreignKey: "userId",
+        as: "Followers",
+        foreignKey: "follower",
+        sourceKey: "id",
+      });
+      models.User.hasMany(models.Follow, {
+        as: "Following",
+        foreignKey: "following",
         sourceKey: "id",
       });
     }
