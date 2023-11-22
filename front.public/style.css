@@ -3,7 +3,30 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f4f4f4;
+  background-color: #eee;
+}
+
+.board {
+  margin: auto;
+  width: 80%;
+  height: 2000px;
+}
+
+.inner-board {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.page-title {
+  height: 10%;
+  margin: 30px 0px 30px 0px;
+  font-size: 3rem;
+  text-align: center;
+}
+.page-title > h1 {
+  padding: 35px;
 }
 
 #app {
@@ -12,35 +35,189 @@ body {
   padding: 20px;
 }
 
+.left-board {
+  width: 20%;
+  height: 1000px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 #auth-form,
 #profile-management,
 #post-form {
   margin-bottom: 20px;
 }
 
-input[type="text"],
-input[type="password"],
+#auth-form {
+  margin-top: 30px;
+  display: block;
+  text-align: center;
+  width: 80%;
+  height: 250px;
+  padding: 10px;
+  background-color: white;
+}
+
+#auth-form > input {
+  margin: 10px auto;
+  margin-top: 10px;
+  padding: auto;
+  display: block;
+
+  width: 90%;
+  height: 15%;
+  border-radius: 5px;
+}
+
+.auth-btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.auth-btn > button {
+  width: 110px;
+  height: 40px;
+  border-radius: 5px;
+  margin: 10px 10px 10px 10px;
+}
+
+.news-list {
+  background-color: white;
+  margin-top: 100px;
+  width: 80%;
+  height: 600px;
+  padding: 10px;
+}
+
 textarea {
   width: 100%;
   padding: 10px;
-  margin: 10px 0;
   border: 1px solid #ddd;
 }
 
 button {
   padding: 10px 20px;
-  background-color: #5cb85c;
+  background-color: #465446;
   color: white;
   border: none;
   cursor: pointer;
 }
 
 button:hover {
-  background-color: #4cae4c;
+  background-color: #131613;
 }
 
 #posts {
   background-color: white;
   padding: 20px;
   border: 1px solid #ddd;
+}
+
+.center-board {
+  width: 60%;
+  height: 1000px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.category-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
+  background-color: white;
+  width: 90%;
+  height: 50px;
+}
+
+.category {
+  width: 25%;
+  text-align: center;
+}
+
+.newspeed-box {
+  margin-top: 5%;
+  background-color: white;
+  width: 90%;
+  height: 900px;
+}
+
+.newspeed {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 10px;
+  margin: auto;
+  margin-top: 20px;
+  width: 90%;
+  height: 200px;
+  border: 1px solid gray;
+}
+
+.newspeed-img {
+  background-color: #465446;
+  width: 25%;
+  height: 180px;
+}
+
+.newspeed-post {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  justify-content: start;
+
+  background-color: yellow;
+  width: 70%;
+  height: 180px;
+}
+
+.post-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: left;
+}
+.user-id {
+  padding: 10px 0px 0px 10px;
+}
+.createdAt {
+  padding: 10px 0px 0px 10px;
+}
+
+.title {
+  padding-left: 10px;
+}
+.content {
+  padding-left: 10px;
+}
+.right-board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 20%;
+  height: 1000px;
+}
+
+.hot-posts {
+  background-color: white;
+  margin-top: 30px;
+  width: 90%;
+  height: 500px;
+}
+
+.gathering-info {
+  background-color: white;
+  width: 90%;
+  height: 400px;
 }
