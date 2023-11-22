@@ -10,8 +10,8 @@
     <div class="board">
       <div class="page-title"><h1>슬기로운 개발생활</h1></div>
       <div class="inner-board">
-        <div class="left-board">
 
+        <div class="left-board">
           <!-- 로그인 박스 -->
           <div id="auth-form">
             <h4>로그인을 해주세요</h4>
@@ -21,20 +21,20 @@
               <button id="login-btn">로그인</button>
               <button id="signup-btn">회원가입</button>
             </div>
-          </div>   
+          </div>
           <!-- 로그인 한 경우  -->
-          <!-- <div id="auth-form">
-            <h4><span>username</span>님</h4>
-            <div>이메일</div>
-            <div>팔로잉</div>
-            <div>팔로워</div>
+          <div id="user-info" hidden>
+            <h4><span id="username">username</span>님</h4>
+            <div id="email">이메일</div>
+            <div id="following">팔로잉</div>
+            <div id="follower">팔로워</div>
             <button id="logout-btn">로그아웃</button>
-            </div>
-          </div> -->
+          </div>
 
           <!-- 최신 it 뉴스 박스 -->
           <div class="news-list">최신 IT 뉴스</div>
         </div>
+
         <div class="center-board">
           <!-- 뉴스피드 카테고리 -->
           <div class="category-box">
@@ -58,22 +58,17 @@
             </div>
           </div>
         </div>
+
         <div class="right-board">
           <!-- 인기글 top10 -->
           <div class="hot-posts">인기글 TOP10</div>
           <!-- 정모공지 -->
           <div class="gathering-info">정모 소식</div>
         </div>
-      </div>
-      <div id="app"></div>
-        <!-- 프로필 관리 -->
-        <div id="profile-management" style="display: none">
-          <input type="text" id="name" placeholder="Name" />
-          <textarea id="bio" placeholder="Bio"></textarea>
-          <button id="update-profile-btn">Update Profile</button>
-        </div>
+        
       </div>
     </div>
+
     <script src="../front.public/pulic.index.js"></script>
   </body>
 </html>
