@@ -9,21 +9,25 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       models.User.hasMany(models.Post, {
-        foreignKey: "user_id",
+        foreignKey: "userId",
         sourceKey: "id",
       });
 
       models.User.hasMany(models.Comment, {
-        foreignKey: "user_id",
+        foreignKey: "userId",
         sourceKey: "id",
       });
 
-      models.User.hasMany(models.Like, {
-        foreignKey: "user_id",
+      models.User.hasMany(models.CommentLike, {
+        foreignKey: "userId",
+        sourceKey: "id",
+      });
+      models.User.hasMany(models.PostLike, {
+        foreignKey: "userId",
         sourceKey: "id",
       });
       models.User.hasMany(models.Follow, {
-        foreignKey: "user_id",
+        foreignKey: "userId",
         sourceKey: "id",
       });
     }
@@ -33,8 +37,8 @@ module.exports = (sequelize, DataTypes) => {
       username: DataTypes.STRING,
       password: DataTypes.STRING,
       email: DataTypes.STRING,
-      profile_description: DataTypes.TEXT,
-      profile_picture_url: DataTypes.TEXT,
+      profileDescription: DataTypes.TEXT,
+      profilePictureUrl: DataTypes.TEXT,
     },
     {
       sequelize,
