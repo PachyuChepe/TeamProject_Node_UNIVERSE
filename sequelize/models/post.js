@@ -9,25 +9,32 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       models.Post.hasMany(models.Comment, {
-        foreignKey: "post_id",
+        foreignKey: "postId",
         sourceKey: "id",
       });
+
+      models.Post.hasMany(models.PostLike, {
+        foreignKey: "postId",
+        sourceKey: "id",
+      });
+
+      models.Post.hasMany(models.MediaContent, {
+        foreignKey: "postId",
+        sourceKey: "id",
+      });
+
       models.Post.belongsTo(models.User, {
-        foreignKey: "user_id",
+        foreignKey: "userId",
         targetKey: "id",
-      });
-      models.Post.hasMany(models.Like, {
-        foreignKey: "post_id",
-        sourceKey: "id",
       });
     }
   }
   Post.init(
     {
-      category_name: DataTypes.STRING,
+      categoryName: DataTypes.STRING,
       title: DataTypes.STRING,
       content: DataTypes.TEXT,
-      multimedia_url: DataTypes.TEXT,
+      multimediaUrl: DataTypes.TEXT,
     },
     {
       sequelize,

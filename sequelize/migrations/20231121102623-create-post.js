@@ -9,7 +9,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      user_id: {
+      userId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
@@ -18,7 +18,7 @@ module.exports = {
         },
         onDelete: "CASCADE",
       },
-      category_name: {
+      categoryName: {
         type: Sequelize.STRING,
       },
       title: {
@@ -27,7 +27,7 @@ module.exports = {
       content: {
         type: Sequelize.TEXT,
       },
-      multimedia_url: {
+      multimediaUrl: {
         type: Sequelize.TEXT,
       },
       createdAt: {

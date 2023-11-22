@@ -71,6 +71,14 @@ app.use("/api", authRouter);
 
 // app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(apiSpec));
 
+// 정적 파일 디렉토리 설정
+app.use(express.static("front.views"));
+
+// 기본 경로 설정
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "front.views", "index.html"));
+});
+
 // 서버 생성 및 실행
 let server;
 if (fs.existsSync("./key.pem") && fs.existsSync("./cert.pem")) {
