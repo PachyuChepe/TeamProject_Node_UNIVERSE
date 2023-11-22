@@ -4,35 +4,56 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
+const path = require("path");
+const session = require("express-session");
 const https = require("https");
 const fs = require("fs");
+const passport = require("passport");
 // const YAML = require("yamljs");
 // const swaggerUi = require("swagger-ui-express");
 
 // 환경 설정 및 데이터베이스 설정
 const env = require("./config/env.config.js");
 const dbConfig = require("./config/db.config.js");
+// 패스포트 설정
+const passportConfig = require("./passport");
 
 const conn = dbConfig.init();
 dbConfig.connect(conn);
 
+// 라우터 설정
+const authRouter = require("./routes/routes.auth.js");
+// const itemRouter = require("./routes/products.router.js");
+
 // 익스프레스 앱 생성 및 설정
 const app = express();
+passportConfig(); // passport 설정
 app.use(express.json());
-app.use(cookieParser());
+app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(morgan("dev"));
+app.use(express.static(path.join(__dirname, "front.public")));
 app.use(
   cors({
     origin: [`http://localhost:${env.SERVER_PORT}`, `https://localhost:${env.SERVER_PORT}`],
     credentials: true,
   }),
 );
+app.use(
+  session({
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.COOKIE_SECRET,
+    cookie: {
+      httpOnly: true,
+      secure: false,
+    },
+  }),
+);
+// 로그인 인증 관련 설정
+app.use(passport.initialize()); // req.user, req.login, req.isAuthenticate, req.logout 생성
+app.use(passport.session()); // connect.sid라는 이름으로 세션 쿠키가 브라우저로 전송
 
-// 라우터 설정
-// const userRouter = require("./routes/user.router.js");
-// const itemRouter = require("./routes/products.router.js");
-
-// app.use("/", [userRouter, itemRouter]);
+app.use("/api", authRouter);
 
 // Swagger API 문서 설정
 // const apiSpec = YAML.load("swagger.yaml");
@@ -49,11 +70,6 @@ app.use(
 // });
 
 // app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(apiSpec));
-
-// 기본 경로 설정
-app.get("/", (req, res) => {
-  res.send("안녕하세요 세계!");
-});
 
 // 서버 생성 및 실행
 let server;
