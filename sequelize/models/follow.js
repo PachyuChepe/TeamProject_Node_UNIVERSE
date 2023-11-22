@@ -9,16 +9,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       models.Follow.belongsTo(models.User, {
-        foreignKey: "user_id",
+        foreignKey: "userId",
+        targetKey: "id",
+      });
+      models.Follow.belongsTo(models.User, {
+        foreignKey: "userId",
         targetKey: "id",
       });
     }
   }
   Follow.init(
-    {
-      follower: DataTypes.INTEGER,
-      following: DataTypes.INTEGER,
-    },
+    {},
     {
       sequelize,
       modelName: "Follow",

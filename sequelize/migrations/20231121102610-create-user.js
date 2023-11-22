@@ -18,10 +18,10 @@ module.exports = {
       email: {
         type: Sequelize.STRING,
       },
-      profile_description: {
+      profileDescription: {
         type: Sequelize.TEXT,
       },
-      profile_picture_url: {
+      profilePictureUrl: {
         type: Sequelize.TEXT,
       },
       createdAt: {
