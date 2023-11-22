@@ -10,7 +10,6 @@ const { isLoggedIn, isNotLoggedIn } = require("../middleware/middleware.verifyTo
 const router = express.Router();
 
 // POST /join
-// router.post('/join', isNotLoggedIn, join)
 router.post("/join", async (req, res) => {
   try {
     const { username, password, email } = req.body;
@@ -54,6 +53,10 @@ router.post("/login", isNotLoggedIn, async (req, res, next) => {
 });
 
 // GET /auth/logout
-// router.get("/logout", isLoggedIn, logout);
+router.get("/logout", isLoggedIn, (req, res) => {
+  req.logout(() => {
+    res.send("로그아웃 되었습니다.");
+  });
+});
 
 module.exports = router;
