@@ -20,9 +20,11 @@ module.exports = {
       },
       profileDescription: {
         type: Sequelize.TEXT,
+        defaultValue: "나를 소개하세요!",
       },
       profilePictureUrl: {
         type: Sequelize.TEXT,
+        defaultValue: "../../front.public/image/Default-Profile-Image.png",
       },
       createdAt: {
         allowNull: false,
