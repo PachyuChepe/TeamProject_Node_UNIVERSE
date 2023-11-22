@@ -20,6 +20,7 @@ dbConfig.connect(conn);
 // 익스프레스 앱 생성 및 설정
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // api 호출 시 form 형태의 데이터를 정상적으로 처리하기 위해
 app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(
@@ -30,10 +31,11 @@ app.use(
 );
 
 // 라우터 설정
-// const userRouter = require("./routes/user.router.js");
+const userRouter = require("./routes/routes.user.js");
 // const itemRouter = require("./routes/products.router.js");
 
 // app.use("/", [userRouter, itemRouter]);
+app.use("/api", [userRouter]);
 
 // Swagger API 문서 설정
 // const apiSpec = YAML.load("swagger.yaml");
