@@ -49,7 +49,7 @@ exports.mailVerify = async (req, res, next) => {
 			`,
       attachments: [
         {
-          filename: "UNIVERSE.png",
+          filename: "UNIVERSE.jpg",
           path: "../TeamProject_Node/logo/UNIVERSE.jpg",
           cid: "UNIVERSE",
         },
