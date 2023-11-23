@@ -39,8 +39,9 @@ app.use(
 const userRouter = require("./routes/routes.user.js");
 const postRouter = require("./routes/routes.post.js");
 const commentRouter = require("./routes/routes.comment.js");
+const likeRouter = require("./routes/routes.like.js");
 
-app.use("/api", [userRouter, postRouter, commentRouter]);
+app.use("/api", [userRouter, postRouter, commentRouter, likeRouter]);
 
 // Swagger API 문서 설정
 // const apiSpec = YAML.load("swagger.yaml");
