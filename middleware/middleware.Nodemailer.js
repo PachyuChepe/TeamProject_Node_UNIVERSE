@@ -21,6 +21,17 @@ exports.mailVerify = async (req, res, next) => {
       to: `<${email}>`,
       subject: "유니버스 인증메일",
       html: `
+      <div style='
+      margin: 0 auto 0 auto;
+      padding: 3.5% 0 5% 0;
+      text-align: center;
+      border: 0.5px solid #ececec;
+      height: 50%;
+      width: 50%;
+      '>
+      <img src="cid:UNIVERSE" /><br/><br/><br/>
+
+      
       <span style="
       font-size: 30pt;
       border: 0.5px solid #ececec;
@@ -34,7 +45,15 @@ exports.mailVerify = async (req, res, next) => {
       ">
       &copy; Copyright UNIVERSE, 2023 All Rights Reserved.
       </h4>
+      </div>
 			`,
+      attachments: [
+        {
+          filename: "UNIVERSE.png",
+          path: "../TeamProject_Node/image/UNIVERSE.jpg",
+          cid: "UNIVERSE",
+        },
+      ],
     };
 
     transporter.sendMail(message, (err) => {
