@@ -12,6 +12,10 @@ router.post("/post/:postId/comment", isLoggedIn, async (req, res) => {
   const { postId } = req.params;
   const { content } = req.body;
 
+  if (isNaN(postId)) {
+    return res.status(400).json({ success: false, message: "잘못된 게시글 ID입니다." });
+  }
+
   try {
     if (!content) {
       return res.status(400).json({ success: false, message: "필수 입력 정보가 누락되었습니다." });
@@ -29,7 +33,7 @@ router.post("/post/:postId/comment", isLoggedIn, async (req, res) => {
 
     return res.status(201).json({ success: true, message: "댓글을 등록하였습니다.", data: newComment });
   } catch (err) {
-    console.log("무슨 에러임?", err);
+    // console.error("무슨 에러임?", err);
     return res.status(500).json({ success: false, message: "댓글 등록에 실패하였습니다." });
   }
 });
@@ -37,6 +41,11 @@ router.post("/post/:postId/comment", isLoggedIn, async (req, res) => {
 // Read (특정 게시글의 모든 댓글 조회)
 router.get("/posts/:postId/comments", async (req, res) => {
   const { postId } = req.params;
+
+  if (isNaN(postId)) {
+    return res.status(400).json({ success: false, message: "잘못된 유저 ID입니다." });
+  }
+
   // const sort = req.query.sort ? req.query.sort.toUpperCase() : "DESC";
 
   // if (sort !== "ASC" && sort !== "DESC") {
@@ -95,7 +104,7 @@ router.get("/comment/:commentId", async (req, res) => {
 
     return res.status(200).json({ success: true, data: getComment });
   } catch (err) {
-    // console.log("조회 실패", err);
+    // console.error("조회 실패", err);
     return res.status(500).json({ success: false, message: "댓글 조회에 실패하였습니다." });
   }
 });
@@ -105,6 +114,10 @@ router.put("/comment/:commentId", isLoggedIn, async (req, res) => {
   const { commentId } = req.params;
   const { id } = res.locals.user;
   const { content } = req.body;
+
+  if (isNaN(commentId)) {
+    return res.status(400).json({ success: false, message: "잘못된 댓글 ID입니다." });
+  }
 
   if (!content) {
     return res.status(400).json({ success: false, message: "필수 입력 정보가 누락되었습니다." });
@@ -119,7 +132,7 @@ router.put("/comment/:commentId", isLoggedIn, async (req, res) => {
 
     return res.status(200).json({ success: true, message: "댓글 정보를 수정하였습니다." });
   } catch (err) {
-    // console.log("뭐가문젠데", err);
+    // console.error("뭐가문젠데", err);
     return res.status(500).json({ success: false, message: "댓글 수정에 실패하였습니다." });
   }
 });
@@ -144,7 +157,7 @@ router.delete("/comment/:commentId", isLoggedIn, async (req, res) => {
 
     return res.status(200).json({ success: true, message: "댓글을 삭제하였습니다." });
   } catch (err) {
-    // console.log("뭐가문제임", err);
+    // console.error("뭐가문제임", err);
     return res.status(500).json({ success: false, message: "댓글 삭제에 실패하였습니다." });
   }
 });

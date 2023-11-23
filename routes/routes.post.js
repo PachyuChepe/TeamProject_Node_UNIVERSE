@@ -106,6 +106,10 @@ router.put("/post/:postId", isLoggedIn, async (req, res) => {
   const { id } = res.locals.user;
   const { categoryName, title, content, multimediaUrl } = req.body;
 
+  if (isNaN(postId)) {
+    return res.status(400).json({ success: false, message: "잘못된 게시글 ID입니다." });
+  }
+
   if (!categoryName || !title || !content) {
     return res.status(400).json({ success: false, message: "필수 입력 정보가 누락되었습니다." });
   }

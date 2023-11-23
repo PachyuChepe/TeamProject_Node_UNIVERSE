@@ -12,13 +12,14 @@ exports.isLoggedIn = async (req, res, next) => {
   if (!authToken || authType !== "Bearer") {
     return res.status(401).send({
       success: false,
-      message: "인증 헤더 형식이 올바르지 않습니다.",
+      message: "로그인이 필요합니다.",
     });
   }
 
   try {
     const { userId } = jwt.verify(authToken, process.env.JWT_SECRET);
     const user = await User.findByPk(userId);
+    // res.clearCookie("Authorization");
     if (!user) {
       return res.status(401).send({
         success: false,

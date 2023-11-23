@@ -139,7 +139,7 @@ router.put("/user/me", isLoggedIn, uploadImage.single("profilePictureUrl"), asyn
     await user.update({ password: hashedPassword, username, profileDescription, profilePictureUrl });
     res.status(200).json({ success: true, message: "사용자 정보가 성공적으로 업데이트되었습니다." });
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     res.status(500).json({ success: false, message: "서버 오류가 발생했습니다." });
   }
 });
