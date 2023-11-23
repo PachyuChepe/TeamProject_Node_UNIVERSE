@@ -30,7 +30,7 @@ router.post("/post", isLoggedIn, async (req, res) => {
 
     return res.status(201).json({ success: true, message: "게시글을 등록하였습니다.", data: newPost });
   } catch (err) {
-    console.log("무슨 에러임?", err);
+    // console.error("무슨 에러임?", err);
     return res.status(500).json({ success: false, message: "게시글 등록에 실패하였습니다." });
   }
 });
@@ -95,7 +95,7 @@ router.get("/post/:postId", async (req, res) => {
 
     return res.status(200).json({ success: true, data: getPost });
   } catch (err) {
-    // console.log("조회 실패", err);
+    // console.error("조회 실패", err);
     return res.status(500).json({ success: false, message: "게시글 조회에 실패하였습니다." });
   }
 });
@@ -123,7 +123,7 @@ router.put("/post/:postId", isLoggedIn, async (req, res) => {
 
     return res.status(200).json({ success: true, message: "게시글 정보를 수정하였습니다." });
   } catch (err) {
-    // console.log("뭐가문젠데", err);
+    // console.error("뭐가문젠데", err);
     return res.status(500).json({ success: false, message: "게시글 수정에 실패하였습니다." });
   }
 });
@@ -148,7 +148,7 @@ router.delete("/post/:postId", isLoggedIn, async (req, res) => {
 
     return res.status(200).json({ success: true, message: "게시글을 삭제하였습니다." });
   } catch (err) {
-    // console.log("뭐가문제임", err);
+    // console.error("뭐가문제임", err);
     return res.status(500).json({ success: false, message: "게시글 삭제에 실패하였습니다." });
   }
 });
