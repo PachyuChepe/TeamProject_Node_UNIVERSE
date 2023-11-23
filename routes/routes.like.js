@@ -38,6 +38,22 @@ router.post("/post/:postId/like", isLoggedIn, async (req, res) => {
   }
 });
 
+// 게시물에 대한 좋아요 수
+router.get("/post/:postId/likes/count", async (req, res) => {
+  const { postId } = req.params;
+
+  try {
+    const likesCount = await PostLike.count({
+      where: { postId: postId },
+    });
+
+    return res.status(200).json({ success: true, likesCount });
+  } catch (err) {
+    console.error("Error in getting likes count for post:", err);
+    return res.status(500).json({ success: false, message: "좋아요 수를 가져오는데 실패하였습니다." });
+  }
+});
+
 // 게시물에 대한 좋아요 삭제
 router.delete("/post/:postId/like", isLoggedIn, async (req, res) => {
   const { postId } = req.params;
@@ -92,6 +108,22 @@ router.post("/comment/:commentId/like", isLoggedIn, async (req, res) => {
   } catch (err) {
     console.error("Error in likeComment:", err);
     return res.status(500).json({ success: false, message: "댓글 좋아요에 실패하였습니다." });
+  }
+});
+
+// 댓글에 대한 좋아요 수
+router.get("/comment/:commentId/likes/count", async (req, res) => {
+  const { commentId } = req.params;
+
+  try {
+    const likesCount = await CommentLike.count({
+      where: { commentId: commentId },
+    });
+
+    return res.status(200).json({ success: true, likesCount });
+  } catch (err) {
+    console.error("Error in getting likes count for comment:", err);
+    return res.status(500).json({ success: false, message: "좋아요 수를 가져오는데 실패하였습니다." });
   }
 });
 
