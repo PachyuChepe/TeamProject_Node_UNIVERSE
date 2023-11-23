@@ -1,6 +1,7 @@
 // 로그인 검증 미들웨어
 
 exports.isLoggedIn = (req, res, next) => {
+  console.log(req.isAuthenticated());
   if (req.isAuthenticated()) {
     next();
   } else {

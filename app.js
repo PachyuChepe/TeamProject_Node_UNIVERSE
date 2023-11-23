@@ -15,6 +15,7 @@ const passport = require("passport");
 // 환경 설정 및 데이터베이스 설정
 const env = require("./config/env.config.js");
 const dbConfig = require("./config/db.config.js");
+
 // 패스포트 설정
 const passportConfig = require("./passport");
 
@@ -27,7 +28,7 @@ const authRouter = require("./routes/routes.auth.js");
 
 // 익스프레스 앱 생성 및 설정
 const app = express();
-passportConfig(); // passport 설정
+
 app.use(express.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(morgan("dev"));
@@ -52,6 +53,8 @@ app.use(
 // 로그인 인증 관련 설정
 app.use(passport.initialize()); // req.user, req.login, req.isAuthenticate, req.logout 생성
 app.use(passport.session()); // connect.sid라는 이름으로 세션 쿠키가 브라우저로 전송
+
+passportConfig(); // passport 설정
 
 app.use("/api", authRouter);
 
