@@ -6,11 +6,10 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { User } = require("../sequelize/models/index.js");
-const env = require("../config/env.config.js");
 const { isLoggedIn, isNotLoggedIn } = require("../middleware/middleware.verifyToken.js");
 const { mailVerify } = require("../middleware/middleware.Nodemailer.js");
 const s3Client = require("../config/awsS3.config.js");
-const uploadImage = require("../config/multer.config.js");
+const uploadImage = require("../middleware/middleware.multer.js");
 
 // 회원가입
 router.post("/join", isNotLoggedIn, mailVerify, async (req, res) => {
@@ -69,7 +68,7 @@ router.post("/login", isNotLoggedIn, async (req, res) => {
       return res.status(401).json({ success: false, message: "패스워드가 일치하지 않습니다." });
     }
 
-    const token = jwt.sign({ userId: user.id }, env.JWT_SECRET, { expiresIn: "12h" });
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: "12h" });
     res.cookie("Authorization", `Bearer ${token}`);
     // res.cookie("token", token, { httpOnly: true, secure: true, sameSite: "Strict" });
     res.status(200).json({ success: true, message: "로그인 성공", token });

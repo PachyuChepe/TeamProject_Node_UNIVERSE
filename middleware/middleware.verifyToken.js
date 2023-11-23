@@ -3,7 +3,6 @@
 
 const jwt = require("jsonwebtoken");
 const { User } = require("../sequelize/models/index.js");
-const env = require("../config/env.config.js");
 
 exports.isLoggedIn = async (req, res, next) => {
   const { Authorization } = req.cookies;
@@ -18,7 +17,7 @@ exports.isLoggedIn = async (req, res, next) => {
   }
 
   try {
-    const { userId } = jwt.verify(authToken, env.JWT_SECRET);
+    const { userId } = jwt.verify(authToken, process.env.JWT_SECRET);
     const user = await User.findByPk(userId);
     if (!user) {
       return res.status(401).send({
@@ -58,7 +57,7 @@ exports.isNotLoggedIn = async (req, res, next) => {
     return;
   }
   try {
-    jwt.verify(authToken, env.JWT_SECRET);
+    jwt.verify(authToken, process.env.JWT_SECRET);
 
     res.status(401).send({
       success: false,

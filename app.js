@@ -11,8 +11,7 @@ const logger = require("./config/winston.config.js");
 // const YAML = require("yamljs");
 // const swaggerUi = require("swagger-ui-express");
 
-// 환경 설정 및 데이터베이스 설정
-const env = require("./config/env.config.js");
+// 데이터베이스 설정
 const dbConfig = require("./config/db.config.js");
 
 const conn = dbConfig.init();
@@ -27,9 +26,11 @@ app.use(cookieParser());
 // app.use(morgan("combined", { stream: { write: (message) => logger.info(message.trim()) } }));
 app.use(morgan("dev", { stream: { write: (message) => logger.info(message.trim()) } }));
 
+let serverPort = process.env.SERVER_PORT || 4000;
+
 app.use(
   cors({
-    origin: [`http://localhost:${env.SERVER_PORT}`, `https://localhost:${env.SERVER_PORT}`],
+    origin: [`http://localhost:${serverPort}`, `https://localhost:${serverPort}`],
     credentials: true,
   }),
 );
@@ -48,7 +49,7 @@ app.use("/api", [userRouter, postRouter]);
 //   if (server.url.includes("localhost")) {
 //     return {
 //       ...server,
-//       url: `http://localhost:${env.SERVER_PORT}`,
+//       url: `http://localhost:${process.env.SERVER_PORT}`,
 //     };
 //   }
 //   return server;
@@ -73,9 +74,9 @@ if (fs.existsSync("./key.pem") && fs.existsSync("./cert.pem")) {
 
   const credentials = { key: privateKey, cert: certificate };
   server = https.createServer(credentials, app);
-  server.listen(env.SERVER_PORT, () => console.log(`HTTPS server is running on port ${env.SERVER_PORT}`));
+  server.listen(serverPort, () => console.log(`HTTPS server is running on port ${serverPort}`));
 } else {
-  server = app.listen(env.SERVER_PORT, () => console.log(`HTTP server is running on port ${env.SERVER_PORT}`));
+  server = app.listen(serverPort, () => console.log(`HTTP server is running on port ${serverPort}`));
 }
 
 module.exports = server;
