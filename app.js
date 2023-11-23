@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const https = require("https");
 const fs = require("fs");
+const logger = require("./config/winston.config.js");
 // const YAML = require("yamljs");
 // const swaggerUi = require("swagger-ui-express");
 
@@ -21,7 +22,11 @@ dbConfig.connect(conn);
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
-app.use(morgan("dev"));
+
+// app.use(morgan("dev"));
+// app.use(morgan("combined", { stream: { write: (message) => logger.info(message.trim()) } }));
+app.use(morgan("dev", { stream: { write: (message) => logger.info(message.trim()) } }));
+
 app.use(
   cors({
     origin: [`http://localhost:${env.SERVER_PORT}`, `https://localhost:${env.SERVER_PORT}`],

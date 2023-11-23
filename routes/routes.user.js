@@ -1,5 +1,4 @@
 // 유저 CRUD
-// routes/user.router.js
 
 const express = require("express");
 
@@ -10,6 +9,8 @@ const { User } = require("../sequelize/models/index.js");
 const env = require("../config/env.config.js");
 const { isLoggedIn, isNotLoggedIn } = require("../middleware/middleware.verifyToken.js");
 const { mailVerify } = require("../middleware/middleware.Nodemailer.js");
+const s3Client = require("../config/awsS3.config.js");
+const uploadImage = require("../config/multer.config.js");
 
 // 회원가입
 router.post("/join", isNotLoggedIn, mailVerify, async (req, res) => {
@@ -98,10 +99,10 @@ router.get("/user/me", isLoggedIn, async (req, res) => {
 });
 
 // 회원 정보 수정
-router.put("/user/me", isLoggedIn, async (req, res) => {
+router.put("/user/me", isLoggedIn, uploadImage.single("profilePictureUrl"), async (req, res) => {
   const { id } = res.locals.user;
+  const { currentPassword, newPassword, username, profileDescription } = req.body;
 
-  const { currentPassword, newPassword, username, profileDescription, profilePictureUrl } = req.body;
   try {
     const user = await User.findByPk(id);
 
@@ -118,11 +119,28 @@ router.put("/user/me", isLoggedIn, async (req, res) => {
       return res.status(400).json({ success: false, message: "비밀번호는 최소 6자 이상이며, 대소문자, 숫자, 하나 이상의 특수문자를 포함해야 합니다." });
     }
 
+    let profilePictureUrl = user.profilePictureUrl;
+    // 새 이미지가 업로드된 경우
+    if (req.file) {
+      // 기존 이미지가 있는 경우, S3에서 삭제
+      if (user.profilePictureUrl) {
+        const oldImageKey = user.profilePictureUrl.split("/").pop(); // S3 key 추출
+        await s3Client
+          .deleteObject({
+            Bucket: process.env.BUCKET,
+            Key: `folder/${oldImageKey}`,
+          })
+          .promise();
+      }
+
+      profilePictureUrl = req.file.location; // 새 S3 URL
+    }
+
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     await user.update({ password: hashedPassword, username, profileDescription, profilePictureUrl });
     res.status(200).json({ success: true, message: "사용자 정보가 성공적으로 업데이트되었습니다." });
   } catch (error) {
-    // console.error(error);
+    console.error(error);
     res.status(500).json({ success: false, message: "서버 오류가 발생했습니다." });
   }
 });
