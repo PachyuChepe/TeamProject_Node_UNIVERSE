@@ -100,6 +100,7 @@ router.get("/user/me", isLoggedIn, async (req, res) => {
 // 회원 정보 수정
 router.put("/user/me", isLoggedIn, async (req, res) => {
   const { id } = res.locals.user;
+
   const { currentPassword, newPassword, username, profileDescription, profilePictureUrl } = req.body;
   try {
     const user = await User.findByPk(id);
