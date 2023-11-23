@@ -12,7 +12,7 @@ const s3Client = require("../config/awsS3.config.js");
 const uploadImage = require("../middleware/middleware.multer.js");
 
 // 회원가입
-router.post("/join", isNotLoggedIn, mailVerify, async (req, res) => {
+router.post("/join", isNotLoggedIn, async (req, res) => {
   const { email, password, confirmPassword, username } = req.body;
   try {
     // 필수 입력 값 검증
