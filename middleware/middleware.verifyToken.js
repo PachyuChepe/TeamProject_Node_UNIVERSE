@@ -38,6 +38,7 @@ exports.isLoggedIn = async (req, res, next) => {
         message: "토큰이 만료되었습니다.",
       });
     } else {
+      // res.clearCookie("Authorization");
       // console.error(err);
       return res.status(500).send({
         success: false,
@@ -68,7 +69,6 @@ exports.isNotLoggedIn = async (req, res, next) => {
     next();
   }
 };
-
 
 // ======= 효진님 로그인 미들웨어 (추후 코드 병합)
 
@@ -103,4 +103,3 @@ exports.isNotLoggedIn = async (req, res, next) => {
 //     });
 //   }
 // };
-
