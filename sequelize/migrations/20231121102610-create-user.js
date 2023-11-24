@@ -20,9 +20,20 @@ module.exports = {
       },
       profileDescription: {
         type: Sequelize.TEXT,
+        defaultValue: "나를 소개하세요!",
       },
       profilePictureUrl: {
         type: Sequelize.TEXT,
+        defaultValue: "../../front.public/image/Default-Profile-Image.png",
+      },
+      // // ========= 효진님 코드
+      provider: {
+        type: Sequelize.ENUM("naver", "kakao"),
+        allowNull: true,
+      },
+      snsId: {
+        type: Sequelize.STRING(30),
+        allowNull: true,
       },
       createdAt: {
         allowNull: false,

@@ -43,8 +43,23 @@ module.exports = (sequelize, DataTypes) => {
       username: DataTypes.STRING,
       password: DataTypes.STRING,
       email: DataTypes.STRING,
-      profileDescription: DataTypes.TEXT,
-      profilePictureUrl: DataTypes.TEXT,
+      profileDescription: {
+        type: DataTypes.TEXT,
+        defaultValue: "나를 소개하세요!",
+      },
+      profilePictureUrl: {
+        type: DataTypes.TEXT,
+        defaultValue: "../../front.public/image/Default-Profile-Image.png",
+      },
+      // // ============ 효진님 코드
+      provider: {
+        type: DataTypes.ENUM("naver", "kakao"),
+        allowNull: true,
+      },
+      snsId: {
+        type: DataTypes.STRING(30),
+        allowNull: true,
+      },
     },
     {
       sequelize,
