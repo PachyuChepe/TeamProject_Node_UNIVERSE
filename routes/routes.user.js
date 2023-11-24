@@ -48,7 +48,7 @@ router.post("/join", isNotLoggedIn, async (req, res) => {
     const { password: _, ...userData } = user.toJSON();
     return res.status(201).json({ success: true, data: userData });
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     return res.status(500).json({ success: false, message: "서버 오류가 발생했습니다." });
   }
 });
