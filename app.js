@@ -9,7 +9,7 @@ const https = require("https");
 const fs = require("fs");
 const logger = require("./config/winston.config.js");
 
-// const passport = require("passport"); // ===== 효진님 코드
+const passport = require("passport"); // ===== 효진님 코드
 // const YAML = require("yamljs");
 // const swaggerUi = require("swagger-ui-express");
 
@@ -19,8 +19,8 @@ const dbConfig = require("./config/db.config.js");
 const conn = dbConfig.init();
 dbConfig.connect(conn);
 // 패스포트 설정
-// const passportConfig = require("./passport");
-// passportConfig();
+const passportConfig = require("./passport");
+passportConfig();
 
 // 익스프레스 앱 생성 및 설정
 const app = express();
@@ -34,22 +34,22 @@ app.use(morgan("dev", { stream: { write: (message) => logger.info(message.trim()
 
 let serverPort = process.env.SERVER_PORT || 4000;
 
-// // ===== 효진님 코드
-// app.use(cookieParser(process.env.COOKIE_SECRET)); // 저장된 connect.sid를 {connect.sid = 234567867654534} 형태의 객체로 만듬
-// app.use(
-//   session({
-//     resave: false,
-//     saveUninitialized: false,
-//     secret: process.env.COOKIE_SECRET,
-//     cookie: {
-//       httpOnly: true,
-//       secure: false,
-//     },
-//   }),
-// );
+// ===== 효진님 코드
+app.use(cookieParser(process.env.COOKIE_SECRET)); // 저장된 connect.sid를 {connect.sid = 234567867654534} 형태의 객체로 만듬
+app.use(
+  session({
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.COOKIE_SECRET,
+    cookie: {
+      httpOnly: true,
+      secure: false,
+    },
+  }),
+);
 
-// app.use(passport.initialize()) // req.user, req.login, req.isAuthenticate, req.logout 생성
-// app.use(passport.session()) // connect.sid라는 이름으로 세션 쿠키가 브라우저로 전송
+app.use(passport.initialize()); // req.user, req.login, req.isAuthenticate, req.logout 생성
+app.use(passport.session()); // connect.sid라는 이름으로 세션 쿠키가 브라우저로 전송
 
 app.use(express.static(path.join(__dirname, "front.public")));
 app.use(
@@ -66,9 +66,8 @@ const commentRouter = require("./routes/routes.comment.js");
 const likeRouter = require("./routes/routes.like.js");
 const followRouter = require("./routes/routes.follow.js");
 
-app.use("/api", [userRouter, postRouter, commentRouter, likeRouter, followRouter]);
-
-// app.use("/", userRouter); // ===== 효진님 코드
+// app.use("/api", [userRouter, postRouter, commentRouter, likeRouter, followRouter]);
+app.use("/api", [userRouter]);
 
 // Swagger API 문서 설정
 // const apiSpec = YAML.load("swagger.yaml");

@@ -7,50 +7,49 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { User } = require("../sequelize/models/index.js");
 const { isLoggedIn, isNotLoggedIn } = require("../middleware/middleware.verifyToken.js");
-const { mailVerify } = require("../middleware/middleware.Nodemailer.js");
-const s3Client = require("../config/awsS3.config.js");
-const uploadImage = require("../middleware/middleware.multer.js");
+// const { mailVerify } = require("../middleware/middleware.Nodemailer.js");
+// const s3Client = require("../config/awsS3.config.js");
+// const uploadImage = require("../middleware/middleware.multer.js");
 
-// 회원가입
-router.post("/api/join", async (req, res) => {
-  try {
-    // 필수 입력 값 검증
-    if (!email || !password || !confirmPassword || !username) {
-      return res.status(400).json({ success: false, message: "필수 입력 정보가 누락되었습니다" });
-    }
+// // 회원가입
+// router.post("/api/join", async (req, res) => {
+//   try {
+//     // 필수 입력 값 검증
+//     if (!email || !password || !confirmPassword || !username) {
+//       return res.status(400).json({ success: false, message: "필수 입력 정보가 누락되었습니다" });
+//     }
 
-    // 이메일 형식 검증
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ success: false, message: "유효하지 않은 이메일 형식입니다" });
-    }
+//     // 이메일 형식 검증
+//     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//     if (!emailRegex.test(email)) {
+//       return res.status(400).json({ success: false, message: "유효하지 않은 이메일 형식입니다" });
+//     }
 
-    // 비밀번호 강도 검증
-    if (password.length < 6 || !/[A-Z]/.test(password) || !/[0-9]/.test(password) || !/[!@#$%^&*]/.test(password)) {
-      return res.status(400).json({ success: false, message: "비밀번호는 최소 6자 이상이며, 대소문자, 숫자, 하나 이상의 특수문자를 포함 해야합니다." });
-    }
+//     // 비밀번호 강도 검증
+//     if (password.length < 6 || !/[A-Z]/.test(password) || !/[0-9]/.test(password) || !/[!@#$%^&*]/.test(password)) {
+//       return res.status(400).json({ success: false, message: "비밀번호는 최소 6자 이상이며, 대소문자, 숫자, 하나 이상의 특수문자를 포함 해야합니다." });
+//     }
 
-    // 비밀번호 일치 검증
-    if (password !== confirmPassword) {
-      return res.status(400).json({ success: false, message: "비밀번호가 일치하지 않습니다" });
-    }
+//     // 비밀번호 일치 검증
+//     if (password !== confirmPassword) {
+//       return res.status(400).json({ success: false, message: "비밀번호가 일치하지 않습니다" });
+//     }
 
-    // 이메일 중복 확인
-    const existingUser = await User.findOne({ where: { email } });
-    if (existingUser) {
-      return res.status(409).json({ success: false, message: "이미 사용 중인 이메일입니다" });
-    }
+//     // 이메일 중복 확인
+//     const existingUser = await User.findOne({ where: { email } });
+//     if (existingUser) {
+//       return res.status(409).json({ success: false, message: "이미 사용 중인 이메일입니다" });
+//     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({ email, password: hashedPassword, username });
+//     const hashedPassword = await bcrypt.hash(password, 10);
+//     const user = await User.create({ email, password: hashedPassword, username });
 
-    const { password: _, ...userData } = user.toJSON();
-    return res.status(201).json({ success: true, data: userData });
-  } catch (error) {
-    // console.error(error);
-    return res.status(500).json({ success: false, message: "서버 오류가 발생했습니다." });
-  }
-});
+//     const { password: _, ...userData } = user.toJSON();
+//     return res.status(201).json({ success: true, data: userData });
+//   } catch (error) {
+//     return res.status(500).json({ success: false, message: "서버 오류가 발생했습니다." });
+//   }
+// });
 
 // // ================== 효진님 코드
 // const express = require("express");
@@ -63,67 +62,67 @@ router.post("/api/join", async (req, res) => {
 // const db = require("../sequelize/models");
 // const User = db.User;
 
-// const authMiddleware = require("../middleware/middleware.verifyToken");
+const authMiddleware = require("../middleware/middleware.verifyToken");
 
 // const router = express.Router();
 
-// router.use((req, res, next) => {
-//   res.locals.user = req.user; // 로그인을 안 한 경우  passport.deserializeUser로부터 복원될 유저정보가 없으므로 null이 됨.
-//   next();
-// });
+router.use((req, res, next) => {
+  res.locals.user = req.user; // 로그인을 안 한 경우  passport.deserializeUser로부터 복원될 유저정보가 없으므로 null이 됨.
+  next();
+});
 
-// // 회원가입
-// router.post("api/join", async (req, res) => {
-//   try {
-//     // 이미 로그인을 한 경우 에러메세지 + 종료
-//     if (res.locals.user) {
-//       return res.status(400).send({
-//         errorMessage: "이미 로그인된 유저입니다.",
-//       });
-//     }
-//     const { email, username, password } = req.body;
+// 회원가입
+router.post("/join", async (req, res) => {
+  try {
+    // 이미 로그인을 한 경우 에러메세지 + 종료
+    if (res.locals.user) {
+      return res.status(400).send({
+        errorMessage: "이미 로그인된 유저입니다.",
+      });
+    }
+    const { email, username, password } = req.body;
 
-//     // 이메일 검증식 : 소문자 a~z 와 숫자 0~9까지 + @ + 소문자 a~z + . + 소문자 a~z (2~3 자리)의 형태로 가능
-//     let regex = new RegExp("[a-z0-9]+@[a-z]+.+[a-z]{2,3}");
+    // 이메일 검증식 : 소문자 a~z 와 숫자 0~9까지 + @ + 소문자 a~z + . + 소문자 a~z (2~3 자리)의 형태로 가능
+    let regex = new RegExp("[a-z0-9]+@[a-z]+.+[a-z]{2,3}");
 
-//     // 이메일 형식이 검증식을 통과 못할때 오류 + 조기리턴
-//     if (!regex.test(email)) {
-//       return res.status(400).send({
-//         errorMessage: "이메일 형식이 올바르지 않습니다.",
-//       });
-//     }
+    // 이메일 형식이 검증식을 통과 못할때 오류 + 조기리턴
+    if (!regex.test(email)) {
+      return res.status(400).send({
+        errorMessage: "이메일 형식이 올바르지 않습니다.",
+      });
+    }
 
-//     // email 중복여부 확인
-//     const existsUsers = await User.findOne({
-//       where: { email },
-//     });
+    // email 중복여부 확인
+    const existsUsers = await User.findOne({
+      where: { email },
+    });
 
-//     // 중복된 이메일이면 오류 + 조기리턴
-//     if (existsUsers) {
-//       return res.status(400).send({
-//         errorMessage: "이메일이 이미 사용중입니다.",
-//       });
-//     }
+    // 중복된 이메일이면 오류 + 조기리턴
+    if (existsUsers) {
+      return res.status(400).send({
+        errorMessage: "이메일이 이미 사용중입니다.",
+      });
+    }
 
-//     // // 비밀번호가 확인비밀번호가 다르거나 비번 길이가 6자 미만일때 오류 + 조기리턴
-//     // if (password !== confirmPassword || password.length < 6) {
-//     //   return res.status(400).send({
-//     //     errorMessage: "비밀번호 확인과 일치한 6자리 이상의 비밀번호를 입력해주세요.",
-//     //   });
-//     // }
+    // // 비밀번호가 확인비밀번호가 다르거나 비번 길이가 6자 미만일때 오류 + 조기리턴
+    // if (password !== confirmPassword || password.length < 6) {
+    //   return res.status(400).send({
+    //     errorMessage: "비밀번호 확인과 일치한 6자리 이상의 비밀번호를 입력해주세요.",
+    //   });
+    // }
 
-//     // 오류가 없을 경우 비밀번호 hash 처리 하여 유저 생성
-//     const hash = await bcrypt.hash(password, 10);
+    // 오류가 없을 경우 비밀번호 hash 처리 하여 유저 생성
+    const hash = await bcrypt.hash(password, 10);
 
-//     await User.create({ email, username, password: hash });
-//     res.status(201).send({
-//       Message: `회원가입이 정상적으로 처리되었습니다. 가입된 유저 정보 -> 이메일 : ${email}, 이름: ${username}`,
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).send({ errorMessage: "서버오류" });
-//   }
-// });
+    await User.create({ email, username, password: hash });
+    res.status(201).send({
+      Message: `회원가입이 정상적으로 처리되었습니다. 가입된 유저 정보 -> 이메일 : ${email}, 이름: ${username}`,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ errorMessage: "서버오류" });
+  }
+});
 
 // 로그인
 router.post("/login", isNotLoggedIn, async (req, res) => {
@@ -169,69 +168,69 @@ router.get("/user/me", isLoggedIn, async (req, res) => {
   }
 });
 
-// 회원 정보 수정
-router.put("/user/me", isLoggedIn, uploadImage.single("profilePictureUrl"), async (req, res) => {
-  const { id } = res.locals.user;
-  const { currentPassword, newPassword, username, profileDescription } = req.body;
+// // 회원 정보 수정
+// router.put("/user/me", isLoggedIn, uploadImage.single("profilePictureUrl"), async (req, res) => {
+//   const { id } = res.locals.user;
+//   const { currentPassword, newPassword, username, profileDescription } = req.body;
 
-  try {
-    const user = await User.findByPk(id);
+//   try {
+//     const user = await User.findByPk(id);
 
-    if (!user) {
-      return res.status(404).json({ success: false, message: "사용자 정보를 찾을 수 없습니다." });
-    }
+//     if (!user) {
+//       return res.status(404).json({ success: false, message: "사용자 정보를 찾을 수 없습니다." });
+//     }
 
-    const passwordValidation = await bcrypt.compare(currentPassword, user.password);
-    if (!passwordValidation) {
-      return res.status(401).json({ success: false, message: "현재 비밀번호가 일치하지 않습니다." });
-    }
+//     const passwordValidation = await bcrypt.compare(currentPassword, user.password);
+//     if (!passwordValidation) {
+//       return res.status(401).json({ success: false, message: "현재 비밀번호가 일치하지 않습니다." });
+//     }
 
-    if (newPassword.length < 6 || !/[A-Z]/.test(newPassword) || !/[0-9]/.test(newPassword) || !/[!@#$%^&*]/.test(newPassword)) {
-      return res.status(400).json({ success: false, message: "비밀번호는 최소 6자 이상이며, 대소문자, 숫자, 하나 이상의 특수문자를 포함해야 합니다." });
-    }
+//     if (newPassword.length < 6 || !/[A-Z]/.test(newPassword) || !/[0-9]/.test(newPassword) || !/[!@#$%^&*]/.test(newPassword)) {
+//       return res.status(400).json({ success: false, message: "비밀번호는 최소 6자 이상이며, 대소문자, 숫자, 하나 이상의 특수문자를 포함해야 합니다." });
+//     }
 
-    let profilePictureUrl = user.profilePictureUrl;
-    // 새 이미지가 업로드된 경우
-    if (req.file) {
-      // 기존 이미지가 있는 경우, S3에서 삭제
-      if (user.profilePictureUrl) {
-        const oldImageKey = user.profilePictureUrl.split("/").pop(); // S3 key 추출
-        await s3Client
-          .deleteObject({
-            Bucket: process.env.BUCKET,
-            Key: `folder/${oldImageKey}`,
-          })
-          .promise();
-      }
+//     let profilePictureUrl = user.profilePictureUrl;
+//     // 새 이미지가 업로드된 경우
+//     if (req.file) {
+//       // 기존 이미지가 있는 경우, S3에서 삭제
+//       if (user.profilePictureUrl) {
+//         const oldImageKey = user.profilePictureUrl.split("/").pop(); // S3 key 추출
+//         await s3Client
+//           .deleteObject({
+//             Bucket: process.env.BUCKET,
+//             Key: `folder/${oldImageKey}`,
+//           })
+//           .promise();
+//       }
 
-      profilePictureUrl = req.file.location; // 새 S3 URL
-    }
+//       profilePictureUrl = req.file.location; // 새 S3 URL
+//     }
 
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    await user.update({ password: hashedPassword, username, profileDescription, profilePictureUrl });
-    res.status(200).json({ success: true, message: "사용자 정보가 성공적으로 업데이트되었습니다." });
-  } catch (error) {
-    // console.error(error);
-    res.status(500).json({ success: false, message: "서버 오류가 발생했습니다." });
-  }
-});
+//     const hashedPassword = await bcrypt.hash(newPassword, 10);
+//     await user.update({ password: hashedPassword, username, profileDescription, profilePictureUrl });
+//     res.status(200).json({ success: true, message: "사용자 정보가 성공적으로 업데이트되었습니다." });
+//   } catch (error) {
+//     // console.error(error);
+//     res.status(500).json({ success: false, message: "서버 오류가 발생했습니다." });
+//   }
+// });
 
-// 회원 탈퇴
-router.delete("/user", isLoggedIn, async (req, res) => {
-  const { id } = res.locals.user;
-  try {
-    const user = await User.findByPk(id);
-    if (!user) {
-      return res.status(404).json({ success: false, message: "사용자 정보를 찾을 수 없습니다." });
-    }
-    await user.destroy();
-    res.clearCookie("Authorization");
-    res.status(200).json({ success: true, message: "회원 탈퇴가 성공적으로 처리되었습니다." });
-  } catch (error) {
-    // console.error(error);
-    res.status(500).json({ success: false, message: "서버 오류가 발생했습니다." });
-  }
-});
+// // 회원 탈퇴
+// router.delete("/user", isLoggedIn, async (req, res) => {
+//   const { id } = res.locals.user;
+//   try {
+//     const user = await User.findByPk(id);
+//     if (!user) {
+//       return res.status(404).json({ success: false, message: "사용자 정보를 찾을 수 없습니다." });
+//     }
+//     await user.destroy();
+//     res.clearCookie("Authorization");
+//     res.status(200).json({ success: true, message: "회원 탈퇴가 성공적으로 처리되었습니다." });
+//   } catch (error) {
+//     // console.error(error);
+//     res.status(500).json({ success: false, message: "서버 오류가 발생했습니다." });
+//   }
+// });
 
 // 로그아웃
 router.post("/logout", isLoggedIn, (req, res) => {
@@ -343,7 +342,7 @@ router.post("/logout", isLoggedIn, (req, res) => {
 //     if (!confirmPassword) return res.status(400).json({ message: "비밀번호를 다시 한 번 입력하세요." });
 
 // 인증 성공시 마이페이지 조회 가능
-router.get("/api/users/me", authMiddleware, async (req, res) => {
+router.get("/users/me", isLoggedIn, async (req, res) => {
   const hello = "hello world";
   try {
     const user = await User.findOne({
@@ -359,14 +358,14 @@ router.get("/api/users/me", authMiddleware, async (req, res) => {
   }
 });
 
-router.get("/api/logout", async (req, res) => {
-  // 이메일 로그인인 경우
-  if (req.cookies.includes("Bearer")) {
-    return res.clearCookie("Authorization");
-  }
-  // 소셜 로그인인 경우
-  req.logout();
-});
+// router.get("/api/logout", async (req, res) => {
+//   // 이메일 로그인인 경우
+//   if (req.cookies.includes("Bearer")) {
+//     return res.clearCookie("Authorization");
+//   }
+//   // 소셜 로그인인 경우
+//   req.logout();
+// });
 //     // 비밀번호 - 비밀번호 확인 일치여부 검사 status(400) -> 정상작동 확인
 //     if (password !== confirmPassword) return res.status(400).json({ message: "비밀번호와 비밀번호 확인이 일치하지 않습니다." });
 

@@ -2,6 +2,9 @@
 if (document.cookie) {
   document.getElementById("auth-form").style.display = "none";
   document.getElementById("user-info").style.display = "block";
+} else {
+  document.getElementById("user-info").style.display = "none";
+  document.getElementById("auth-form").style.display = "block";
 }
 
 // 로그인
@@ -24,15 +27,5 @@ document.getElementById("login-btn").addEventListener("click", async () => {
 // 로그아웃
 document.getElementById("logout-btn").addEventListener("click", async () => {
   console.log("로그아웃");
-
-  try {
-    const result = await axios.get("/api/users/me");
-    console.log(result);
-    //   alert("로그아웃 완료");
-    //   location.reload();
-  } catch (err) {
-    console.error(err);
-    alert("서버오류");
-    //   location.reload();
-  }
+  document.cookie = "max-age=0";
 });

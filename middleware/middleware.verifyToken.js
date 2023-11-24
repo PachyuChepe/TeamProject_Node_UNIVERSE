@@ -19,7 +19,7 @@ exports.isLoggedIn = async (req, res, next) => {
   try {
     const { userId } = jwt.verify(authToken, process.env.JWT_SECRET);
     const user = await User.findByPk(userId);
-    // res.clearCookie("Authorization");
+    res.clearCookie("Authorization");
     if (!user) {
       return res.status(401).send({
         success: false,
