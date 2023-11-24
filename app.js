@@ -58,15 +58,17 @@ app.use(
     credentials: true,
   }),
 );
-
+const passport = require("./config/kakao.config.js");
+app.use(passport.initialize());
 // 라우터 설정
 const userRouter = require("./routes/routes.user.js");
 const postRouter = require("./routes/routes.post.js");
 const commentRouter = require("./routes/routes.comment.js");
 const likeRouter = require("./routes/routes.like.js");
 const followRouter = require("./routes/routes.follow.js");
+const kakaoRouter = require("./routes/routes.kakao.js");
 
-app.use("/api", [userRouter, postRouter, commentRouter, likeRouter, followRouter]);
+app.use("/api", [userRouter, postRouter, commentRouter, likeRouter, followRouter, kakaoRouter]);
 
 // app.use("/", userRouter); // ===== 효진님 코드
 

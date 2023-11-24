@@ -7,25 +7,25 @@ dotenv.config();
 
 module.exports = {
   // [개발 단계] 로컬 환경 MySQL Workbench 8.0v 연결
-  // development: {
-  //   host: process.env.LOCAL_MYSQL_HOST,
-  //   port: process.env.LOCAL_MYSQL_PORT,
-  //   username: process.env.LOCAL_MYSQL_USERNAME,
-  //   password: process.env.LOCAL_MYSQL_PASSWORD,
-  //   database: process.env.LOCAL_MYSQL_DATABASE_NAME,
-  //   dialect: "mysql",
-  //   logging: false, //콘솔창 쿼리 로그 off
-  // },
-
   development: {
-    host: process.env.RDS_MYSQL_HOST,
-    port: process.env.RDS_MYSQL_PORT,
-    username: process.env.RDS_MYSQL_USERNAME,
-    password: process.env.RDS_MYSQL_PASSWORD,
-    database: process.env.RDS_MYSQL_DATABASE_NAME,
+    host: process.env.LOCAL_MYSQL_HOST,
+    port: process.env.LOCAL_MYSQL_PORT,
+    username: process.env.LOCAL_MYSQL_USERNAME,
+    password: process.env.LOCAL_MYSQL_PASSWORD,
+    database: process.env.LOCAL_MYSQL_DATABASE_NAME,
     dialect: "mysql",
-    logging: false,
+    logging: false, //콘솔창 쿼리 로그 off
   },
+
+  // development: {
+  //   host: process.env.RDS_MYSQL_HOST,
+  //   port: process.env.RDS_MYSQL_PORT,
+  //   username: process.env.RDS_MYSQL_USERNAME,
+  //   password: process.env.RDS_MYSQL_PASSWORD,
+  //   database: process.env.RDS_MYSQL_DATABASE_NAME,
+  //   dialect: "mysql",
+  //   logging: false,
+  // },
 
   // [개발 단계 원격 DB] CloudType MariaDB 10.5v 연결
   mariaDB: {
