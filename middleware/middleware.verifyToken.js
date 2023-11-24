@@ -38,7 +38,7 @@ exports.isLoggedIn = async (req, res, next) => {
         message: "토큰이 만료되었습니다.",
       });
     } else {
-      res.clearCookie("Authorization");
+      // res.clearCookie("Authorization");
       // console.error(err);
       return res.status(500).send({
         success: false,
