@@ -4,35 +4,71 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>뉴스피드 프로젝트</title>
-    <link rel="stylesheet" href="../front.public/style.css" />
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div id="app">
-      <!-- 로그인 및 회원가입 폼 -->
-      <div id="auth-form">
-        <input type="text" id="username" placeholder="Username" />
-        <input type="password" id="password" placeholder="Password" />
-        <button id="login-btn">Login</button>
-        <button id="signup-btn">Sign Up</button>
-      </div>
+    <div class="board">
+      <div class="page-title"><h1>슬기로운 개발생활</h1></div>
+      <div class="inner-board">
+        <div class="left-board">
+          <!-- 로그인 박스 -->
+          <div id="auth-form">
+            <h4>로그인을 해주세요</h4>
+            <input type="text" id="email" placeholder="이메일" />
+            <input type="password" id="password" placeholder="비밀번호" />
+            <div class="auth-btn">
+              <button id="login-btn">로그인</button>
+              <button id="signup-btn">회원가입</button>
+            </div>
+            <button class="naver-btn">네이버 로그인</button>
+            <button class="kakao-btn"><a href="auth/kakao">카카오 로그인</a></button>
+          </div>
+          <!-- 로그인 한 경우  -->
+          <div id="user-info">
+            <h4><span id="username">username</span>님</h4>
+            <div id="email">이메일</div>
+            <div id="following">팔로잉</div>
+            <div id="follower">팔로워</div>
+            <button id="logout-btn">로그아웃</button>
+          </div>
 
-      <!-- 프로필 관리 -->
-      <div id="profile-management" style="display: none">
-        <input type="text" id="name" placeholder="Name" />
-        <textarea id="bio" placeholder="Bio"></textarea>
-        <button id="update-profile-btn">Update Profile</button>
-      </div>
+          <!-- 최신 it 뉴스 박스 -->
+          <div class="news-list">최신 IT 뉴스</div>
+        </div>
 
-      <!-- 게시물 작성 폼 -->
-      <div id="post-form" style="display: none">
-        <textarea id="post-content" placeholder="Write a post..."></textarea>
-        <button id="post-btn">Post</button>
-      </div>
+        <div class="center-board">
+          <!-- 뉴스피드 카테고리 -->
+          <div class="category-box">
+            <div class="category">자유게시판</div>
+            <div class="category">IT 정보</div>
+            <div class="category">지식공유방</div>
+            <div class="category">스터디</div>
+          </div>
+          <!-- 뉴스피드 리스트 -->
+          <div class="newspeed-box">
+            <div class="newspeed">
+              <div class="newspeed-img">image</div>
+              <div class="newspeed-post">
+                <div class="post-info">
+                  <div class="user-id">작성자</div>
+                  <div class="createdAt">작성날짜</div>
+                </div>
+                <div class="title">제목</div>
+                <div class="content">내용</div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-      <!-- 게시물 목록 -->
-      <div id="posts"></div>
+        <div class="right-board">
+          <!-- 인기글 top10 -->
+          <div class="hot-posts">인기글 TOP10</div>
+          <!-- 정모공지 -->
+          <div class="gathering-info">정모 소식</div>
+        </div>
+      </div>
     </div>
-
-    <script src="../front.public/pulic.index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="pulic.index.js"></script>
   </body>
 </html>

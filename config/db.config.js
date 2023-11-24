@@ -1,6 +1,7 @@
 // config/db.config.js
 
 const mysql = require("mysql");
+const mysql2 = require("mysql2");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -15,6 +16,16 @@ module.exports = {
     dialect: "mysql",
     logging: false, //콘솔창 쿼리 로그 off
   },
+
+  // development: {
+  //   host: process.env.RDS_MYSQL_HOST,
+  //   port: process.env.RDS_MYSQL_PORT,
+  //   username: process.env.RDS_MYSQL_USERNAME,
+  //   password: process.env.RDS_MYSQL_PASSWORD,
+  //   database: process.env.RDS_MYSQL_DATABASE_NAME,
+  //   dialect: "mysql",
+  //   logging: false,
+  // },
 
   // [개발 단계 원격 DB] CloudType MariaDB 10.5v 연결
   mariaDB: {
@@ -41,7 +52,7 @@ module.exports = {
   init: function () {
     const env = process.env.NODE_ENV || "development";
     const config = this[env];
-    return mysql.createConnection({
+    return mysql2.createConnection({
       host: config.host,
       port: config.port,
       user: config.username,
