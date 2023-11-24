@@ -238,47 +238,48 @@ router.delete("/user", isLoggedIn, async (req, res) => {
 router.post("/logout", isLoggedIn, (req, res) => {
   res.clearCookie("Authorization");
   res.status(200).json({ success: true, message: "로그아웃 성공" });
-  router.post("/api/login", async (req, res) => {
-    // 이미 로그인을 한 경우 에러메세지 + 종료
-    if (res.locals.user) {
-      return res.status(400).send({
-        errorMessage: "이미 로그인된 유저입니다.",
-      });
-    }
-
-    try {
-      const { email, password } = req.body;
-
-      // 해당 이메일의 유저정보 있는지 확인
-      const user = await User.findOne({
-        where: {
-          email,
-        },
-      });
-
-      // 정보가 있는 경우 비밀번호 검증
-      const auth = await bcrypt.compare(password, user.password);
-
-      // 사용자가 존재하지 않거나, 입력받은 비밀번호가 사용자의 비밀번호화 다를때
-      if (!user || !auth) {
-        return res.status(400).send({
-          errorMessage: "이메일 또는 패스워드가 틀렸습니다.",
-        });
-      }
-
-      const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-        expiresIn: "12h",
-      });
-      res.cookie("Authorization", `Bearer ${token}`);
-      res.status(200).send({ message: "로그인에 성공하였습니다.", token });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).send({ errorMessage: "서버오류" });
-    }
-  });
 });
 
 // // ========================== 효진님 코드
+// // 로그인
+// router.post("/api/login", async (req, res) => {
+//   // 이미 로그인을 한 경우 에러메세지 + 종료
+//   if (res.locals.user) {
+//     return res.status(400).send({
+//       errorMessage: "이미 로그인된 유저입니다.",
+//     });
+//   }
+
+//   try {
+//     const { email, password } = req.body;
+
+//     // 해당 이메일의 유저정보 있는지 확인
+//     const user = await User.findOne({
+//       where: {
+//         email,
+//       },
+//     });
+
+//     // 정보가 있는 경우 비밀번호 검증
+//     const auth = await bcrypt.compare(password, user.password);
+
+//     // 사용자가 존재하지 않거나, 입력받은 비밀번호가 사용자의 비밀번호화 다를때
+//     if (!user || !auth) {
+//       return res.status(400).send({
+//         errorMessage: "이메일 또는 패스워드가 틀렸습니다.",
+//       });
+//     }
+
+//     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+//       expiresIn: "12h",
+//     });
+//     res.cookie("Authorization", `Bearer ${token}`);
+//     res.status(200).send({ message: "로그인에 성공하였습니다.", token });
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).send({ errorMessage: "서버오류" });
+//   }
+// });
 // // 카카오 로그인
 // // /kakao로 요청오면, 카카오 로그인 페이지로 가게 되고, 카카오 서버를 통해 카카오 로그인을 하게 되면, 다음 라우터로 요청한다.
 // router.get("/auth/kakao", passport.authenticate("kakao"));
