@@ -27,7 +27,6 @@ module.exports = {
     logging: false,
   },
 
-
   // [개발 단계 원격 DB] CloudType MariaDB 10.5v 연결
   mariaDB: {
     host: process.env.CT_MYSQL_HOST,
