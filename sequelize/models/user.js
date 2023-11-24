@@ -45,6 +45,14 @@ module.exports = (sequelize, DataTypes) => {
       email: DataTypes.STRING,
       profileDescription: DataTypes.TEXT,
       profilePictureUrl: DataTypes.TEXT,
+      provider: {
+        type: DataTypes.ENUM('naver', 'kakao'),
+        allowNull: true,
+      },
+      snsId: {
+        type: DataTypes.STRING(30),
+        allowNull: true,
+      },
     },
     {
       sequelize,

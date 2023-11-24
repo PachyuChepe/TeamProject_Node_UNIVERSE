@@ -24,6 +24,14 @@ module.exports = {
       profilePictureUrl: {
         type: Sequelize.TEXT,
       },
+      provider: {
+        type: Sequelize.ENUM("naver", "kakao"),
+        allowNull: true,
+      },
+      snsId: {
+        type: Sequelize.STRING(30),
+        allowNull: true,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

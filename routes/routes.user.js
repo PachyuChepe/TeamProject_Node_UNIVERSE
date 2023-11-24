@@ -13,8 +13,13 @@ const authMiddleware = require("../middleware/middleware.verifyToken");
 
 const router = express.Router();
 
+router.use((req, res, next) => {
+  res.locals.user = req.user; // 로그인을 안 한 경우  passport.deserializeUser로부터 복원될 유저정보가 없으므로 null이 됨.
+  next();
+});
+
 // 회원가입
-router.post("/join", async (req, res) => {
+router.post("api/join", async (req, res) => {
   try {
     // 이미 로그인을 한 경우 에러메세지 + 종료
     if (res.locals.user) {
@@ -46,12 +51,12 @@ router.post("/join", async (req, res) => {
       });
     }
 
-    // 비밀번호가 확인비밀번호가 다르거나 비번 길이가 6자 미만일때 오류 + 조기리턴
-    if (password !== confirmPassword || password.length < 6) {
-      return res.status(400).send({
-        errorMessage: "비밀번호 확인과 일치한 6자리 이상의 비밀번호를 입력해주세요.",
-      });
-    }
+    // // 비밀번호가 확인비밀번호가 다르거나 비번 길이가 6자 미만일때 오류 + 조기리턴
+    // if (password !== confirmPassword || password.length < 6) {
+    //   return res.status(400).send({
+    //     errorMessage: "비밀번호 확인과 일치한 6자리 이상의 비밀번호를 입력해주세요.",
+    //   });
+    // }
 
     // 오류가 없을 경우 비밀번호 hash 처리 하여 유저 생성
     const hash = await bcrypt.hash(password, 10);
@@ -67,7 +72,7 @@ router.post("/join", async (req, res) => {
 });
 
 // 로그인
-router.post("/login", async (req, res) => {
+router.post("/api/login", async (req, res) => {
   // 이미 로그인을 한 경우 에러메세지 + 종료
   if (res.locals.user) {
     return res.status(400).send({
@@ -98,16 +103,34 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
       expiresIn: "12h",
     });
-
-    res.send({ 토큰: token });
+    res.cookie("Authorization", `Bearer ${token}`);
+    res.status(200).send({ message: "로그인에 성공하였습니다.", token });
   } catch (error) {
     console.error(error);
     return res.status(500).send({ errorMessage: "서버오류" });
   }
 });
 
+// 카카오 로그인
+// /kakao로 요청오면, 카카오 로그인 페이지로 가게 되고, 카카오 서버를 통해 카카오 로그인을 하게 되면, 다음 라우터로 요청한다.
+router.get("/auth/kakao", passport.authenticate("kakao"));
+
+// 위에서 카카오 서버 로그인이 되면, 카카오 redirect url 설정에 따라 이쪽 라우터로 오게 된다.
+router.get(
+  "/auth/kakao/callback",
+  // 그리고 passport 로그인 전략에 의해 kakaoStrategy로 가서 카카오계정 정보와 DB를 비교해서 회원가입시키거나 로그인 처리하게 한다.
+  passport.authenticate("kakao", {
+    failureRedirect: "/?error=카카오로그인 실패", // kakaoStrategy에서 실패한다면 실행
+  }),
+  // kakaoStrategy에서 성공한다면 콜백 실행
+  (req, res) => {
+    res.redirect("/");
+  },
+);
+
 // 인증 성공시 마이페이지 조회 가능
-router.get("/users/me", authMiddleware, async (req, res) => {
+router.get("api/users/me", async (req, res) => {
+  const hello = "hello world";
   try {
     const user = await User.findOne({
       where: {
@@ -120,6 +143,15 @@ router.get("/users/me", authMiddleware, async (req, res) => {
     console.error(error);
     return res.status(500).send({ errorMessage: "서버오류" });
   }
+});
+
+router.get("api/logout", async (req, res) => {
+  // 이메일 로그인인 경우
+  if (req.cookies.includes("Bearer")) {
+    return res.clearCookie("Authorization");
+  }
+  // 소셜 로그인인 경우
+  req.logout();
 });
 
 module.exports = router;

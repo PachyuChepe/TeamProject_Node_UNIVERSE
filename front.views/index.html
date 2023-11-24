@@ -4,13 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>뉴스피드 프로젝트</title>
-    <link rel="stylesheet" href="../front.public/style.css" />
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="board">
       <div class="page-title"><h1>슬기로운 개발생활</h1></div>
       <div class="inner-board">
-
         <div class="left-board">
           <!-- 로그인 박스 -->
           <div id="auth-form">
@@ -21,9 +20,11 @@
               <button id="login-btn">로그인</button>
               <button id="signup-btn">회원가입</button>
             </div>
+            <button class="naver-btn">네이버 로그인</button>
+            <button class="kakao-btn"><a href="auth/kakao">카카오 로그인</a></button>
           </div>
           <!-- 로그인 한 경우  -->
-          <div id="user-info" hidden>
+          <div id="user-info">
             <h4><span id="username">username</span>님</h4>
             <div id="email">이메일</div>
             <div id="following">팔로잉</div>
@@ -65,10 +66,9 @@
           <!-- 정모공지 -->
           <div class="gathering-info">정모 소식</div>
         </div>
-        
       </div>
     </div>
-
-    <script src="../front.public/pulic.index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="pulic.index.js"></script>
   </body>
 </html>

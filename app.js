@@ -1,12 +1,13 @@
 // app.js
-
 const express = require("express");
 const cors = require("cors");
+const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const path = require("path");
 const https = require("https");
 const fs = require("fs");
+const passport = require("passport");
 // const YAML = require("yamljs");
 // const swaggerUi = require("swagger-ui-express");
 
@@ -16,6 +17,9 @@ const dbConfig = require("./config/db.config.js");
 
 const conn = dbConfig.init();
 dbConfig.connect(conn);
+// 패스포트 설정
+const passportConfig = require('./passport')
+passportConfig() 
 
 // 라우터 설정
 const userRouter = require("./routes/routes.user.js");
@@ -24,7 +28,22 @@ const userRouter = require("./routes/routes.user.js");
 // 익스프레스 앱 생성 및 설정
 const app = express();
 app.use(express.json());
-app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use(cookieParser(process.env.COOKIE_SECRET)); // 저장된 connect.sid를 {connect.sid = 234567867654534} 형태의 객체로 만듬
+app.use(
+  session({
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.COOKIE_SECRET,
+    cookie: {
+      httpOnly: true,
+      secure: false,
+    },
+  }),
+);
+
+app.use(passport.initialize()) // req.user, req.login, req.isAuthenticate, req.logout 생성
+app.use(passport.session()) // connect.sid라는 이름으로 세션 쿠키가 브라우저로 전송
+
 app.use(morgan("dev"));
 app.use(express.static(path.join(__dirname, "front.public")));
 app.use(
@@ -34,7 +53,7 @@ app.use(
   }),
 );
 
-app.use("/api", userRouter);
+app.use("/", userRouter);
 
 // Swagger API 문서 설정
 // const apiSpec = YAML.load("swagger.yaml");
