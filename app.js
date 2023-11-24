@@ -38,13 +38,15 @@ let serverPort = process.env.SERVER_PORT || 4000;
 app.use(cookieParser(process.env.COOKIE_SECRET)); // 저장된 connect.sid를 {connect.sid = 234567867654534} 형태의 객체로 만듬
 app.use(
   session({
+    secret: process.env.COOKIE_SECRET,
     resave: false,
     saveUninitialized: false,
-    secret: process.env.COOKIE_SECRET,
     cookie: {
-      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 12,
+      httpOnly: false,
       secure: false,
     },
+    rolling: true,
   }),
 );
 
@@ -89,8 +91,16 @@ app.use("/api", [userRouter]);
 app.use(express.static("front.views"));
 
 // 기본 경로 설정
+// app.get("/", (req, res) => {
+//   res.sendFile(path.join(__dirname, "front.views", "index.html"));
+// });
+
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "front.views", "index.html"));
+  fs.readFile("../front.views/index.html", function (err, data) {
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+    res.write(data);
+    res.end();
+  });
 });
 
 // 서버 생성 및 실행

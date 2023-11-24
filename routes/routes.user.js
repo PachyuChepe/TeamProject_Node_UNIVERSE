@@ -1,12 +1,12 @@
 // 유저 CRUD
 
-const express = require("express");
+// const express = require("express");
 
-const router = express.Router();
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const { User } = require("../sequelize/models/index.js");
-const { isLoggedIn, isNotLoggedIn } = require("../middleware/middleware.verifyToken.js");
+// const router = express.Router();
+// const bcrypt = require("bcrypt");
+// const jwt = require("jsonwebtoken");
+// const { User } = require("../sequelize/models/index.js");
+// const { isLoggedIn, isNotLoggedIn } = require("../middleware/middleware.verifyToken.js");
 // const { mailVerify } = require("../middleware/middleware.Nodemailer.js");
 // const s3Client = require("../config/awsS3.config.js");
 // const uploadImage = require("../middleware/middleware.multer.js");
@@ -51,25 +51,21 @@ const { isLoggedIn, isNotLoggedIn } = require("../middleware/middleware.verifyTo
 //   }
 // });
 
-// // ================== 효진님 코드
-// const express = require("express");
-// const passport = require("passport");
-// const jwt = require("jsonwebtoken");
-// const bcrypt = require("bcrypt");
-// const dotenv = require("dotenv");
-// dotenv.config();
+// // ================== 효진님 코드 ===========================
+const express = require("express");
+const passport = require("passport");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const dotenv = require("dotenv");
+dotenv.config();
 
 // const db = require("../sequelize/models");
 // const User = db.User;
+const { User } = require("../sequelize/models/index.js");
+const { isLoggedIn, isNotLoggedIn } = require("../middleware/middleware.verifyToken.js");
+const { Cookie } = require("express-session");
 
-const authMiddleware = require("../middleware/middleware.verifyToken");
-
-// const router = express.Router();
-
-router.use((req, res, next) => {
-  res.locals.user = req.user; // 로그인을 안 한 경우  passport.deserializeUser로부터 복원될 유저정보가 없으므로 null이 됨.
-  next();
-});
+const router = express.Router();
 
 // 회원가입
 router.post("/join", async (req, res) => {
@@ -123,50 +119,80 @@ router.post("/join", async (req, res) => {
     return res.status(500).send({ errorMessage: "서버오류" });
   }
 });
-
+//isNotLoggedIn
 // 로그인
-router.post("/login", isNotLoggedIn, async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    const user = await User.findOne({ where: { email } });
-
+router.post("/login", async (req, res, next) => {
+  passport.authenticate("local", (authError, user, info) => {
+    // localStrategy 에서 done 호출되면 해당 코드 실행
+    if (authError) {
+      // 서버실패
+      console.error(authError);
+      return next(authError);
+    }
     if (!user) {
-      return res.status(404).json({ success: false, message: "사용자 정보를 찾을 수 없습니다." });
+      // 로직실패 (해당 유저가 없는 경우)
+      return res.redirect(`/?error=${info.message}`);
     }
-
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(401).json({ success: false, message: "패스워드가 일치하지 않습니다." });
-    }
-
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: "12h" });
-    res.cookie("Authorization", `Bearer ${token}`);
-    // res.cookie("token", token, { httpOnly: true, secure: true, sameSite: "Strict" });
-    res.status(200).json({ success: true, message: "로그인 성공", token });
-  } catch (error) {
-    // console.error(error);
-    return res.status(500).json({ success: false, message: "서버 오류가 발생했습니다." });
-  }
+    // 로그인 성공 시 -> passport -> index.js로 감
+    console.log({ authError, user, info });
+    return req.login(user, (loginError) => {
+      if (loginError) {
+        console.error(loginError);
+        return next(loginError);
+      }
+      console.log("유저정보", user.id);
+      return res.send(`로그인 성공!`);
+    });
+  })(req, res, next);
 });
+
+// 카카오 로그인
+// /kakao로 요청오면, 카카오 로그인 페이지로 가게 되고, 카카오 서버를 통해 카카오 로그인을 하게 되면, 다음 라우터로 요청한다.
+router.get("/auth/kakao", passport.authenticate("kakao"));
+
+// 위에서 카카오 서버 로그인이 되면, 카카오 redirect url 설정에 따라 이쪽 라우터로 오게 된다.
+router.get(
+  "/auth/kakao/callback",
+  // 그리고 passport 로그인 전략에 의해 kakaoStrategy로 가서 카카오계정 정보와 DB를 비교해서 회원가입시키거나 로그인 처리하게 한다.
+  passport.authenticate("kakao", {
+    failureRedirect: "/?error=카카오로그인 실패", // kakaoStrategy에서 실패한다면 실행
+  }),
+  // kakaoStrategy에서 성공한다면 콜백 실행
+  (req, res) => {
+    res.redirect("/");
+  },
+);
 
 // 사용자 조회
-router.get("/user/me", isLoggedIn, async (req, res) => {
-  try {
-    const { email, username, profileDescription, profilePictureUrl } = res.locals.user;
+router.get("/users/me", isLoggedIn, async (req, res) => {
+  const dkdk = req.session;
+  res.send(dkdk);
+  // try {
+  //   const { email, username, profileDescription, profilePictureUrl } = res.locals.user;
 
-    if (!email || !username) {
-      return res.status(404).json({ success: false, message: "사용자 정보를 찾을 수 없습니다" });
-    }
+  //   if (!email || !username) {
+  //     return res.status(404).json({ success: false, message: "사용자 정보를 찾을 수 없습니다" });
+  //   }
 
-    res.status(200).json({
-      success: true,
-      data: { username, email, profileDescription, profilePictureUrl },
-    });
-  } catch (error) {
-    // console.error(error);
-    res.status(500).json({ success: false, message: "서버 오류가 발생했습니다." });
-  }
+  //   res.status(200).json({
+  //     success: true,
+  //     data: { username, email, profileDescription, profilePictureUrl },
+  //   });
+  // } catch (error) {
+  //   console.error(error);
+  //   res.status(500).json({ success: false, message: "서버 오류가 발생했습니다." });
+  // }
 });
+
+// 로그아웃
+router.get("/logout", isLoggedIn, (req, res) => {
+  req.logout();
+  // req.session.save((err) => {
+  //   res.redirect("/");
+  // });
+});
+
+// ------------------------- 효진 종료------------------------------
 
 // // 회원 정보 수정
 // router.put("/user/me", isLoggedIn, uploadImage.single("profilePictureUrl"), async (req, res) => {
@@ -232,69 +258,6 @@ router.get("/user/me", isLoggedIn, async (req, res) => {
 //   }
 // });
 
-// 로그아웃
-router.post("/logout", isLoggedIn, (req, res) => {
-  res.clearCookie("Authorization");
-  res.status(200).json({ success: true, message: "로그아웃 성공" });
-});
-
-// // ========================== 효진님 코드
-// // 로그인
-// router.post("/api/login", async (req, res) => {
-//   // 이미 로그인을 한 경우 에러메세지 + 종료
-//   if (res.locals.user) {
-//     return res.status(400).send({
-//       errorMessage: "이미 로그인된 유저입니다.",
-//     });
-//   }
-
-//   try {
-//     const { email, password } = req.body;
-
-//     // 해당 이메일의 유저정보 있는지 확인
-//     const user = await User.findOne({
-//       where: {
-//         email,
-//       },
-//     });
-
-//     // 정보가 있는 경우 비밀번호 검증
-//     const auth = await bcrypt.compare(password, user.password);
-
-//     // 사용자가 존재하지 않거나, 입력받은 비밀번호가 사용자의 비밀번호화 다를때
-//     if (!user || !auth) {
-//       return res.status(400).send({
-//         errorMessage: "이메일 또는 패스워드가 틀렸습니다.",
-//       });
-//     }
-
-//     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-//       expiresIn: "12h",
-//     });
-//     res.cookie("Authorization", `Bearer ${token}`);
-//     res.status(200).send({ message: "로그인에 성공하였습니다.", token });
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).send({ errorMessage: "서버오류" });
-//   }
-// });
-// // 카카오 로그인
-// // /kakao로 요청오면, 카카오 로그인 페이지로 가게 되고, 카카오 서버를 통해 카카오 로그인을 하게 되면, 다음 라우터로 요청한다.
-// router.get("/auth/kakao", passport.authenticate("kakao"));
-
-// // 위에서 카카오 서버 로그인이 되면, 카카오 redirect url 설정에 따라 이쪽 라우터로 오게 된다.
-// router.get(
-//   "/auth/kakao/callback",
-//   // 그리고 passport 로그인 전략에 의해 kakaoStrategy로 가서 카카오계정 정보와 DB를 비교해서 회원가입시키거나 로그인 처리하게 한다.
-//   passport.authenticate("kakao", {
-//     failureRedirect: "/?error=카카오로그인 실패", // kakaoStrategy에서 실패한다면 실행
-//   }),
-//   // kakaoStrategy에서 성공한다면 콜백 실행
-//   (req, res) => {
-//     res.redirect("/");
-//   },
-// );
-
 // // 인증 성공시 마이페이지 조회 가능
 // router.get("api/users/me", async (req, res) => {
 //   const hello = "hello world";
@@ -310,15 +273,6 @@ router.post("/logout", isLoggedIn, (req, res) => {
 //     console.error(error);
 //     return res.status(500).send({ errorMessage: "서버오류" });
 //   }
-// });
-
-// router.get("api/logout", async (req, res) => {
-//   // 이메일 로그인인 경우
-//   if (req.cookies.includes("Bearer")) {
-//     return res.clearCookie("Authorization");
-//   }
-//   // 소셜 로그인인 경우
-//   req.logout();
 // });
 
 // // ===== 정선님 코드
@@ -342,22 +296,22 @@ router.post("/logout", isLoggedIn, (req, res) => {
 //     if (!password) return res.status(400).json({ message: "비밀번호를 입력하세요." });
 //     if (!confirmPassword) return res.status(400).json({ message: "비밀번호를 다시 한 번 입력하세요." });
 
-// 인증 성공시 마이페이지 조회 가능
-router.get("/users/me", isLoggedIn, async (req, res) => {
-  const hello = "hello world";
-  try {
-    const user = await User.findOne({
-      where: {
-        email: res.locals.user.email,
-      },
-      attributes: ["id", "email", "username"],
-    });
-    res.status(200).send({ hello, user });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).send({ errorMessage: "서버오류" });
-  }
-});
+// // 인증 성공시 마이페이지 조회 가능
+// router.get("/users/me", isLoggedIn, async (req, res) => {
+//   const hello = "hello world";
+//   try {
+//     const user = await User.findOne({
+//       where: {
+//         email: res.locals.user.email,
+//       },
+//       attributes: ["id", "email", "username"],
+//     });
+//     res.status(200).send({ hello, user });
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).send({ errorMessage: "서버오류" });
+//   }
+// });
 
 // router.get("/api/logout", async (req, res) => {
 //   // 이메일 로그인인 경우
@@ -367,6 +321,7 @@ router.get("/users/me", isLoggedIn, async (req, res) => {
 //   // 소셜 로그인인 경우
 //   req.logout();
 // });
+
 //     // 비밀번호 - 비밀번호 확인 일치여부 검사 status(400) -> 정상작동 확인
 //     if (password !== confirmPassword) return res.status(400).json({ message: "비밀번호와 비밀번호 확인이 일치하지 않습니다." });
 

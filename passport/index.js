@@ -1,21 +1,26 @@
-passport = require("passport");
-const kakao = require("./kakaoStrategy"); // 카카오서버로 로그인할때
+const passport = require("passport");
+const local = require("./localStarategy");
+const kakao = require("./kakaoStrategy");
 
 const db = require("../sequelize/models");
 const User = db.User;
 
-
 module.exports = () => {
   passport.serializeUser((user, done) => {
-    done(null, user.id);
+    // user === exUser
+    done(null, user.id); // user id만 추출
   });
 
   passport.deserializeUser((id, done) => {
-    //? 두번 inner 조인해서 나를 팔로우하는 followerid와 내가 팔로우 하는 followingid를 가져와 테이블을 붙인다
-    User.findOne({ where: { id } })
-      .then((user) => done(null, user))
+    User.findOne({
+      where: { id },
+    })
+      .then((user) => {
+        done(null, user);
+      }) // req.user, req.session
       .catch((err) => done(err));
   });
 
-  kakao(); // kakao 전략 등록
+  local();
+  kakao();
 };

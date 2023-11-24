@@ -1,7 +1,6 @@
 const passport = require("passport");
 const KakaoStrategy = require("passport-kakao").Strategy;
 
-
 const db = require("../sequelize/models");
 const User = db.User;
 
@@ -10,7 +9,7 @@ module.exports = () => {
     new KakaoStrategy(
       {
         clientID: process.env.KAKAO_KEY, // 카카오 로그인에서 발급받은 REST API 키
-        callbackURL: "/auth/kakao/callback", // 카카오 로그인 Redirect URI 경로
+        callbackURL: "/api/auth/kakao/callback", // 카카오 로그인 Redirect URI 경로
       },
       /*
        * clientID에 카카오 앱 아이디 추가
@@ -30,6 +29,7 @@ module.exports = () => {
           } else {
             // 가입되지 않는 유저면 회원가입 시키고 로그인을 시킨다
             const newUser = await User.create({
+              snsId: profile.id,
               email: profile._json && profile._json.kakao_account_email,
               username: profile.displayName,
               provider: "kakao",
