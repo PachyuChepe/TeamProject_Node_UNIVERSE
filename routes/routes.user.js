@@ -19,7 +19,7 @@ router.use((req, res, next) => {
 });
 
 // 회원가입
-router.post("api/join", async (req, res) => {
+router.post("/api/join", async (req, res) => {
   try {
     // 이미 로그인을 한 경우 에러메세지 + 종료
     if (res.locals.user) {
@@ -129,7 +129,7 @@ router.get(
 );
 
 // 인증 성공시 마이페이지 조회 가능
-router.get("api/users/me", async (req, res) => {
+router.get("/api/users/me", authMiddleware, async (req, res) => {
   const hello = "hello world";
   try {
     const user = await User.findOne({
@@ -138,14 +138,14 @@ router.get("api/users/me", async (req, res) => {
       },
       attributes: ["id", "email", "username"],
     });
-    res.status(200).send({ user });
+    res.status(200).send({ hello, user });
   } catch (error) {
     console.error(error);
     return res.status(500).send({ errorMessage: "서버오류" });
   }
 });
 
-router.get("api/logout", async (req, res) => {
+router.get("/api/logout", async (req, res) => {
   // 이메일 로그인인 경우
   if (req.cookies.includes("Bearer")) {
     return res.clearCookie("Authorization");
