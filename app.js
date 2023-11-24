@@ -25,6 +25,7 @@ dbConfig.connect(conn);
 // 익스프레스 앱 생성 및 설정
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // api 호출 시 form 형태의 데이터를 정상적으로 처리하기 위해
 app.use(cookieParser());
 
 // app.use(morgan("dev"));
