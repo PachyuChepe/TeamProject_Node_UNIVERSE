@@ -18,8 +18,8 @@ const conn = dbConfig.init();
 dbConfig.connect(conn);
 
 // 패스포트 설정
-// const passportConfig = require("./passport");
-// passportConfig();
+const passportConfig = require("./passport");
+passportConfig();
 
 // 익스프레스 앱 생성 및 설정
 const app = express();
