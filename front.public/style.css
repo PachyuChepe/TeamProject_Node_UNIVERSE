@@ -6,6 +6,10 @@ body {
   background-color: #eee;
 }
 
+a {
+  text-decoration: none;
+}
+
 .board {
   margin: auto;
   width: 80%;
@@ -147,7 +151,7 @@ button:hover {
 }
 
 .center-board {
-  width: 60%;
+  width: 50%;
   height: 1000px;
 
   display: flex;
@@ -169,6 +173,10 @@ button:hover {
 
 .category {
   width: 25%;
+  text-align: center;
+}
+
+.tabTitle {
   text-align: center;
 }
 

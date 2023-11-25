@@ -59,8 +59,6 @@ const bcrypt = require("bcrypt");
 const dotenv = require("dotenv");
 dotenv.config();
 
-// const db = require("../sequelize/models");
-// const User = db.User;
 const { User } = require("../sequelize/models/index.js");
 const { isLoggedIn, isNotLoggedIn } = require("../middleware/middleware.verifyToken.js");
 const { Cookie } = require("express-session");
@@ -68,7 +66,7 @@ const { Cookie } = require("express-session");
 const router = express.Router();
 
 // 회원가입
-router.post("/join", async (req, res) => {
+router.post("/join", isNotLoggedIn, async (req, res) => {
   try {
     // 이미 로그인을 한 경우 에러메세지 + 종료
     if (res.locals.user) {
@@ -119,36 +117,34 @@ router.post("/join", async (req, res) => {
     return res.status(500).send({ errorMessage: "서버오류" });
   }
 });
-//isNotLoggedIn
+
 // 로그인
-router.post("/login", async (req, res, next) => {
+router.post("/login", isNotLoggedIn, async (req, res, next) => {
+  // "local" 불러지면 -> passport-index 파일 'local()' 실행 ->  passport-localStrategy 파일 코드 실행 
   passport.authenticate("local", (authError, user, info) => {
     // localStrategy 에서 done 호출되면 해당 코드 실행
     if (authError) {
-      // 서버실패
-      console.error(authError);
+      // 서버 오류
       return next(authError);
     }
     if (!user) {
-      // 로직실패 (해당 유저가 없는 경우)
+      // 해당 유저가 없는 경우
       return res.redirect(`/?error=${info.message}`);
     }
-    // 로그인 성공 시 -> passport -> index.js로 감
-    console.log({ authError, user, info });
+    // 로그인 성공 시 -> passport -> index.js 파일 코드 실행 
     return req.login(user, (loginError) => {
       if (loginError) {
         console.error(loginError);
         return next(loginError);
       }
-      console.log("유저정보", user.id);
       return res.send(`로그인 성공!`);
     });
   })(req, res, next);
 });
 
 // 카카오 로그인
-// /kakao로 요청오면, 카카오 로그인 페이지로 가게 되고, 카카오 서버를 통해 카카오 로그인을 하게 되면, 다음 라우터로 요청한다.
-router.get("/auth/kakao", passport.authenticate("kakao"));
+// "kakao" 불러지면 -> passport-index 파일 'kakao()' 실행 ->  passport-kakaoStrategy 파일 코드 실행 
+router.get("/auth/kakao", isNotLoggedIn, passport.authenticate("kakao"));
 
 // 위에서 카카오 서버 로그인이 되면, 카카오 redirect url 설정에 따라 이쪽 라우터로 오게 된다.
 router.get(
@@ -163,34 +159,54 @@ router.get(
   },
 );
 
+// 네이버 로그인
+// "naver" 불러지면 -> passport-index 파일 'naver()' 실행 ->  passport-naverStrategy 파일 코드 실행 
+router.get("/naver", isNotLoggedIn, passport.authenticate("naver", { authType: "reprompt" }));
+
+// 위에서 네이버 서버 로그인이 되면, 네이버 redirect url 설정에 따라 이쪽 라우터로 오게 된다.
+router.get(
+  "/auth/naver/callback",
+  // 그리고 passport 로그인 전략에 의해 naverStrategy로 가서 네이버 계정 정보와 DB를 비교해서 회원가입시키거나 로그인 처리하게 한다.
+  passport.authenticate("naver", { failureRedirect: "/?error=네이버로그인 실패" }),// naverStrategy로 실패한다면 실행
+  (req, res) => {
+    res.redirect("/");
+  },
+);
 // 사용자 조회
 router.get("/users/me", isLoggedIn, async (req, res) => {
-  const dkdk = req.session;
-  res.send(dkdk);
-  // try {
-  //   const { email, username, profileDescription, profilePictureUrl } = res.locals.user;
-
-  //   if (!email || !username) {
-  //     return res.status(404).json({ success: false, message: "사용자 정보를 찾을 수 없습니다" });
-  //   }
-
-  //   res.status(200).json({
-  //     success: true,
-  //     data: { username, email, profileDescription, profilePictureUrl },
-  //   });
-  // } catch (error) {
-  //   console.error(error);
-  //   res.status(500).json({ success: false, message: "서버 오류가 발생했습니다." });
-  // }
+  try {
+    const user = req.user;
+    const { id } = user;
+    const findUser = await User.findOne({
+      where: { id },
+    });
+    const userInfo = findUser._previousDataValues;
+    return res.json({ userInfo });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send({ errorMessage: "서버오류" });
+  }
 });
 
 // 로그아웃
-router.get("/logout", isLoggedIn, (req, res) => {
+router.get("/logout", (req, res) => {
   req.logout();
-  // req.session.save((err) => {
-  //   res.redirect("/");
-  // });
 });
+// try {
+//   const { email, username, profileDescription, profilePictureUrl } = res.locals.user;
+
+//   if (!email || !username) {
+//     return res.status(404).json({ success: false, message: "사용자 정보를 찾을 수 없습니다" });
+//   }
+
+//   res.status(200).json({
+//     success: true,
+//     data: { username, email, profileDescription, profilePictureUrl },
+//   });
+// } catch (error) {
+//   console.error(error);
+//   res.status(500).json({ success: false, message: "서버 오류가 발생했습니다." });
+// }
 
 // ------------------------- 효진 종료------------------------------
 

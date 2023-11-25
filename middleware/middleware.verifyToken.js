@@ -1,23 +1,27 @@
 // 로그인 검증 미들웨어
 
-// ======= 효진님 로그인 미들웨어 (추후 코드 병합)
+// ======= 효진님 로그인 미들웨어 시작(추후 코드 병합)
 exports.isLoggedIn = (req, res, next) => {
+  // req.isAuthenticated() Passport 자체 내장 함수, 로그인 세션 존재여부 확인
+  // ture 면 다음 라우터로 넘어감
   if (req.isAuthenticated()) {
     next();
   } else {
-
-    res.status(403).send("로그인 필요");
+    res.status(403).send("로그인이 필요합니다.");
   }
 };
 
 exports.isNotLoggedIn = (req, res, next) => {
+  // false 면 다음 라우터로 넘어감
   if (!req.isAuthenticated()) {
     next();
   } else {
-    const message = encodeURIComponent("로그인한 상태입니다.");
+    const message = encodeURIComponent("이미 로그인한 상태입니다.");
     res.redirect(`/?error=${message}`);
   }
 };
+
+// ======= 효진님 로그인 미들웨어 종료(추후 코드 병합)
 
 // middleware/verifyToken.middleware.js
 

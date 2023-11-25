@@ -42,11 +42,11 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 1000 * 60 * 60 * 12,
+      maxAge: 1000 * 60 * 10, // 10분 
       httpOnly: false,
       secure: false,
     },
-    rolling: true,
+    rolling: true, // 서버요청 생기면 다시 쿠키 유효시간 리셋
   }),
 );
 
@@ -68,8 +68,7 @@ const commentRouter = require("./routes/routes.comment.js");
 const likeRouter = require("./routes/routes.like.js");
 const followRouter = require("./routes/routes.follow.js");
 
-// app.use("/api", [userRouter, postRouter, commentRouter, likeRouter, followRouter]);
-app.use("/api", [userRouter]);
+app.use("/api", [userRouter, postRouter, commentRouter, likeRouter, followRouter]);
 
 // Swagger API 문서 설정
 // const apiSpec = YAML.load("swagger.yaml");
