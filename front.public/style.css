@@ -6,6 +6,10 @@ body {
   background-color: #eee;
 }
 
+a {
+  text-decoration: none;
+}
+
 .board {
   margin: auto;
   width: 80%;
@@ -50,7 +54,8 @@ body {
   margin-bottom: 20px;
 }
 
-#auth-form {
+#auth-form,
+#user-info {
   margin-top: 30px;
   display: block;
   text-align: center;
@@ -83,6 +88,21 @@ body {
   border-radius: 5px;
   margin: 10px 5px 10px 5px;
   font-size: 11px;
+}
+#logout-btn {
+  width: 150px;
+  height: 30px;
+  border-radius: 5px;
+  margin: 10px 5px 10px 5px;
+  font-size: 11px;
+}
+
+.profile-img {
+  margin: auto;
+  background-color: #465446;
+  width: 80%;
+  height: 180px;
+  border-radius: 5px;
 }
 
 .naver-btn {
@@ -131,7 +151,7 @@ button:hover {
 }
 
 .center-board {
-  width: 60%;
+  width: 50%;
   height: 1000px;
 
   display: flex;
@@ -153,6 +173,10 @@ button:hover {
 
 .category {
   width: 25%;
+  text-align: center;
+}
+
+.tabTitle {
   text-align: center;
 }
 

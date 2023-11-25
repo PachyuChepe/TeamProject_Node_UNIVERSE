@@ -26,9 +26,9 @@ module.exports = {
         type: Sequelize.TEXT,
         defaultValue: "../../front.public/image/Default-Profile-Image.png",
       },
-      // // ========= 효진님 코드
       provider: {
-        type: Sequelize.ENUM("naver", "kakao"),
+        type: Sequelize.ENUM("local", "kakao", "naver"),
+        defaultValue: "local",
       },
       snsId: {
         type: Sequelize.STRING(30),

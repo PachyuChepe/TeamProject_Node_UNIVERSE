@@ -20,15 +20,17 @@
               <button id="login-btn">로그인</button>
               <button id="signup-btn">회원가입</button>
             </div>
-            <button class="naver-btn">네이버 로그인</button>
-            <button class="kakao-btn"><a href="auth/kakao">카카오 로그인</a></button>
+            <button class="naver-btn"><a href="/api/naver">네이버 로그인</a></button>
+            <button class="kakao-btn"><a href="/api/auth/kakao">카카오 로그인</a></button>
           </div>
+
           <!-- 로그인 한 경우  -->
           <div id="user-info">
+            <div class="profile-img">사진을 업로드 해주세요</div>
             <h4><span id="username">username</span>님</h4>
-            <div id="email">이메일</div>
-            <div id="following">팔로잉</div>
-            <div id="follower">팔로워</div>
+            <div><span id="useremail"></span></div>
+            <div>팔로잉 <span id="following"></span></div>
+            <div>팔로워 <span id="follower"></span></div>
             <button id="logout-btn">로그아웃</button>
           </div>
 
@@ -38,14 +40,17 @@
 
         <div class="center-board">
           <!-- 뉴스피드 카테고리 -->
-          <div class="category-box">
-            <div class="category">자유게시판</div>
-            <div class="category">IT 정보</div>
-            <div class="category">지식공유방</div>
-            <div class="category">스터디</div>
-          </div>
-          <!-- 뉴스피드 리스트 -->
-          <div class="newspeed-box">
+          <nav id="tabButtonNav" class="category-box">
+            <div class="category tabButton" data-tab-section="tabSection1">자유게시판</div>
+            <div class="category tabButton" data-tab-section="tabSection2">IT 정보</div>
+            <div class="category tabButton" data-tab-section="tabSection3">지식공유방</div>
+            <div class="category tabButton" data-tab-section="tabSection4">스터디</div>
+          </nav>
+
+          <!-- 뉴스피드 자유게시판 리스트 -->
+          <section id="tabSection1" class="newspeed-box tabSection">
+            <h4 class="tabTitle">자유게시판</h4>
+            <div id="section1"></div>
             <div class="newspeed">
               <div class="newspeed-img">image</div>
               <div class="newspeed-post">
@@ -57,7 +62,58 @@
                 <div class="content">내용</div>
               </div>
             </div>
-          </div>
+          </section>
+
+          <!-- 뉴스피드 IT 정보 리스트 -->
+          <section id="tabSection2" class="newspeed-box tabSection" hidden>
+            <h4 class="tabTitle">IT 정보</h4>
+            <div id="section2"></div>
+            <div class="newspeed">
+              <div class="newspeed-img">image</div>
+              <div class="newspeed-post">
+                <div class="post-info">
+                  <div class="user-id">작성자</div>
+                  <div class="createdAt">작성날짜</div>
+                </div>
+                <div class="title">제목</div>
+                <div class="content">내용</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 뉴스피드 지식공유방 리스트 -->
+          <section id="tabSection3" class="newspeed-box tabSection" hidden>
+            <h4 class="tabTitle">지식공유방</h4>
+            <div id="section3"></div>
+            <div class="newspeed">
+              <div class="newspeed-img">image</div>
+              <div class="newspeed-post">
+                <div class="post-info">
+                  <div class="user-id">작성자</div>
+                  <div class="createdAt">작성날짜</div>
+                </div>
+                <div class="title">제목</div>
+                <div class="content">내용</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 뉴스피드 스터디 리스트 -->
+          <section id="tabSection4" class="newspeed-box tabSection" hidden>
+            <h4 class="tabTitle">스터디</h4>
+            <div id="section4"></div>
+            <div class="newspeed">
+              <div class="newspeed-img">image</div>
+              <div class="newspeed-post">
+                <div class="post-info">
+                  <div class="user-id">작성자</div>
+                  <div class="createdAt">작성날짜</div>
+                </div>
+                <div class="title">제목</div>
+                <div class="content">내용</div>
+              </div>
+            </div>
+          </section>
         </div>
 
         <div class="right-board">
@@ -70,5 +126,6 @@
     </div>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="pulic.index.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.slim.js" integrity="sha256-UgvvN8vBkgO0luPSUl2s8TIlOSYRoGFAX4jlCIm9Adc=" crossorigin="anonymous"></script>
   </body>
 </html>

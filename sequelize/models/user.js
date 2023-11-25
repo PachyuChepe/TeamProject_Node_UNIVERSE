@@ -53,7 +53,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       // // ============ 효진님 코드
       provider: {
-        type: DataTypes.ENUM("naver", "kakao"),
+        type: DataTypes.ENUM("local", "kakao", "naver"),
+        defaultValue: "local",
       },
       snsId: {
         type: DataTypes.STRING(30),
