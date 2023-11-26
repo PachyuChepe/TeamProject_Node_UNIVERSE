@@ -39,7 +39,7 @@ app.use(
 app.use(express.static(path.join(__dirname, "front.public")));
 app.use(
   cors({
-    origin: [`http://localhost:${serverPort}`, `https://localhost:${serverPort}, `],
+    origin: [`http://localhost:${serverPort}`, `https://localhost:${serverPort}, https://www.vitahub.site, http://www.vitahub.site`],
     credentials: true,
   }),
 );
