@@ -20,10 +20,25 @@ app.use(cookieParser());
 app.use(morgan("dev", { stream: { write: (message) => logger.info(message.trim()) } }));
 let serverPort = process.env.SERVER_PORT || 4000;
 
+app.use(cookieParser(process.env.COOKIE_SECRET)); // 저장된 connect.sid를 {connect.sid = 234567867654534} 형태의 객체로 만듬
+app.use(
+  session({
+    secret: process.env.COOKIE_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 1000 * 60 * 10, // 10분
+      httpOnly: false,
+      secure: false,
+    },
+    rolling: true, // 서버요청 생기면 다시 쿠키 유효시간 리셋
+  }),
+);
+
 app.use(express.static(path.join(__dirname, "front.public")));
 app.use(
   cors({
-    origin: [`http://localhost:${serverPort}`, `https://localhost:${serverPort}`],
+    origin: [`http://localhost:${serverPort}`, `https://localhost:${serverPort}, `],
     credentials: true,
   }),
 );
