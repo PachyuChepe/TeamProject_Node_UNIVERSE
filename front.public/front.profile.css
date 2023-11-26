@@ -1,0 +1,129 @@
+body {
+  margin: 0; /* 여백 제거 */
+  padding: 0; /* 패딩 제거 */
+  background-image: url("https://blog.kakaocdn.net/dn/bmq01s/btsASTLHmaq/EcYJSGp4H50YPC2l2Y3K7k/img.gif");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed; /* 배경 이미지 고정 */
+  overflow-y: hidden; /* 세로 스크롤바 숨김 */
+  color: #333333;
+  font-family: "Noto Sans", sans-serif;
+  position: relative; /* 상대적 위치 설정 */
+}
+
+/* 투명도 조절을 위한 오버레이 */
+::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.05); /* 흰색 오버레이, 10% 투명도 */
+  z-index: -1; /* 배경 뒤에 위치하도록 z-index 설정 */
+}
+
+/* Container */
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Profile Card */
+.profile-card {
+  width: 100%;
+  max-width: 800px;
+  background-color: white;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e1e1e1;
+}
+
+/* Flexbox Utilities */
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.items-center {
+  align-items: center;
+}
+
+/* Profile Image */
+.profile-image {
+  width: 192px;
+  height: 192px;
+  background-color: #d1d1d1;
+  border-radius: 50%;
+  margin-bottom: 20px;
+  background-size: cover; /* 이미지가 영역을 꽉 채우도록 함 */
+  background-position: center; /* 이미지가 중앙에 위치하도록 함 */
+}
+
+/* Buttons */
+.button {
+  background-color: #4dabf7;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: bold;
+  border: none;
+}
+
+.button:hover {
+  background-color: #1f8ce6;
+}
+
+/* Input Styles */
+.input {
+  border: 1px solid #e1e1e1;
+  border-radius: 4px;
+  padding: 10px 16px;
+  width: 100%;
+  max-width: 400px;
+  height: 20px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+/* Labels */
+.label {
+  font-weight: bold;
+  margin-bottom: 8px;
+  display: block;
+  color: #666666;
+}
+
+/* Sidebar and Main Content */
+.sidebar {
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.main-content {
+  margin-bottom: 16px;
+}
+
+@media (min-width: 768px) {
+  .sidebar {
+    width: 33.33333%;
+  }
+  .main-content {
+    margin-left: 50px;
+    flex: 1;
+  }
+}

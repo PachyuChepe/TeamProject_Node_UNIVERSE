@@ -24,14 +24,13 @@ module.exports = {
       },
       profilePictureUrl: {
         type: Sequelize.TEXT,
-        defaultValue: "../../front.public/image/Default-Profile-Image.png",
+        defaultValue: "https://blog.kakaocdn.net/dn/bmSKig/btsAUKUIbIH/6tC2ekqFZRELEBZxijKa6K/img.png",
       },
-      // // ========= 효진님 코드
       provider: {
-        type: Sequelize.ENUM("naver", "kakao"),
+        type: Sequelize.ENUM("local", "kakao", "naver"),
       },
       snsId: {
-        type: Sequelize.STRING(30),
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,
