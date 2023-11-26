@@ -1,131 +1,200 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>뉴스피드 프로젝트</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>슬기로운 개발생활</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="module" defer src="public.user.js"></script>
+    <link rel="stylesheet" href="front.style.css" />
   </head>
-  <body>
-    <div class="board">
-      <div class="page-title"><h1>슬기로운 개발생활</h1></div>
-      <div class="inner-board">
-        <div class="left-board">
-          <!-- 로그인 박스 -->
-          <div id="auth-form">
-            <h4>로그인을 해주세요</h4>
-            <input type="text" id="email" placeholder="이메일" />
-            <input type="password" id="password" placeholder="비밀번호" />
-            <div class="auth-btn">
-              <button id="login-btn">로그인</button>
-              <button id="signup-btn">회원가입</button>
-            </div>
-            <button class="naver-btn"><a href="/api/naver">네이버 로그인</a></button>
-            <button class="kakao-btn"><a href="/api/auth/kakao">카카오 로그인</a></button>
+  <body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+      <header class="text-center mb-6">
+        <h1 class="text-4xl font-bold">슬기로운 개발생활</h1>
+      </header>
+
+      <nav class="flex justify-center space-x-4 mb-6">
+        <a href="#" class="text-lg font-semibold">자유게시판</a>
+        <a href="#" class="text-lg font-semibold">IT 정보</a>
+        <a href="#" class="text-lg font-semibold">지식공유방</a>
+        <a href="#" class="text-lg font-semibold">스터디</a>
+      </nav>
+
+      <div class="grid grid-cols-3 gap-4">
+        <div class="col-span-1">
+          <!-- 로그인 페이지 -->
+          <div id="loginSection" class="bg-white p-4 shadow rounded mb-6">
+            <!-- <h2 class="text-lg font-semibold mb-4">로그인을 해주세요</h2> -->
+            <form id="loginForm">
+              <input type="email" id="email" placeholder="아이디" class="w-full mb-3 px-3 py-2 border rounded" />
+              <input type="password" id="password" placeholder="비밀번호" class="w-full mb-3 px-3 py-2 border rounded" />
+              <a href="join.html" class="w-full mb-2 px-3 py-2 bg-green-500 text-white rounded block text-center"> 회원가입 </a>
+              <button type="submit" class="w-full px-3 py-2 bg-yellow-400 text-white rounded">로그인</button>
+              <div class="flex justify-center space-x-40">
+                <a href="http://localhost:4000/api/kakao" class="w-full pt-2 rounded">
+                  <img
+                    class="h-10"
+                    src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FlZrVh%2FbtsATkvtAKL%2FFWLWrxVbi6E2z5iMrzreU1%2Fimg.png"
+                    alt="버튼 설명"
+                  />
+                </a>
+                <a href="http://localhost:4000/api/naver" class="w-full pt-2 rounded">
+                  <img
+                    class="h-10"
+                    src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FzWyxf%2FbtsAXgZTRtX%2F7Q4stNTGmFD8AdkyUiBwR1%2Fimg.png"
+                    alt="버튼 설명"
+                  />
+                </a>
+              </div>
+            </form>
           </div>
 
-          <!-- 로그인 한 경우  -->
-          <div id="user-info">
-            <div class="profile-img">사진을 업로드 해주세요</div>
-            <h4><span id="username">username</span>님</h4>
-            <div><span id="useremail"></span></div>
-            <div>팔로잉 <span id="following"></span></div>
-            <div>팔로워 <span id="follower"></span></div>
-            <button id="logout-btn">로그아웃</button>
+          <!-- 로그인 이후의 페이지 -->
+          <div id="loggedInSection" class="bg-white p-4 shadow rounded mb-6">
+            <!-- <h2 class="text-lg font-semibold mb-4">로그인을 해주세요</h2> -->
+            <form>
+              <div class="col-span-2">
+                <div class="flex items-center mb-4">
+                  <div class="profile-image"></div>
+                  <div class="flex-1 ml-5">
+                    <div id="username" class="h-6 text-3xl"></div>
+                    <div class="stats-card mt-6 flex justify-center">
+                      <div class="stats-item">
+                        <label>게시물</label>
+                        <span id="postsCount">0</span>
+                      </div>
+                      <div class="stats-item">
+                        <label>팔로워</label>
+                        <span id="followersCount">0</span>
+                      </div>
+                      <div class="stats-item">
+                        <label>팔로잉</label>
+                        <span id="followingCount">0</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Placeholder for more posts -->
+              </div>
+            </form>
+            <!-- 글쓰기 버튼 -->
+            <a href="postEditor.html" class="w-full mb-2 px-3 py-2 bg-blue-400 hover:bg-blue-500 text-white rounded block text-center transition duration-200"
+              >글쓰기</a
+            >
+
+            <!-- 프로필 수정 버튼 -->
+            <a href="profile.html" class="w-full mb-2 px-3 py-2 bg-green-400 hover:bg-green-500 text-white rounded block text-center transition duration-200"
+              >프로필 수정</a
+            >
+
+            <!-- 로그아웃 버튼 -->
+            <button id="logoutButton" type="button" class="w-full px-3 py-2 bg-gray-400 hover:bg-gray-500 text-white rounded transition duration-200">
+              로그아웃
+            </button>
+            <!-- 회원탈퇴 버튼 -->
+            <button id="deleteAccountButton" type="button" class="w-full mt-2 px-3 py-2 bg-red-400 hover:bg-red-500 text-white rounded transition duration-200">
+              회원탈퇴
+            </button>
+          </div>
+          <div class="bg-white p-4 shadow rounded">
+            <h2 class="text-lg font-semibold mb-4">인기글 TOP10</h2>
+            <div class="h-6 bg-yellow-300 mb-2"></div>
+            <div class="h-6 bg-yellow-300"></div>
+
+            <!-- Placeholder for IT news content -->
+          </div>
+        </div>
+
+        <div class="col-span-2">
+          <div class="bg-white p-4 shadow rounded mb-6">
+            <h2 class="text-lg font-semibold mb-4">자유게시판</h2>
+            <div id="postsContainer"></div>
+
+            <!-- Placeholder for more posts -->
           </div>
 
-          <!-- 최신 it 뉴스 박스 -->
-          <div class="news-list">최신 IT 뉴스</div>
-        </div>
-
-        <div class="center-board">
-          <!-- 뉴스피드 카테고리 -->
-          <nav id="tabButtonNav" class="category-box">
-            <div class="category tabButton" data-tab-section="tabSection1">자유게시판</div>
-            <div class="category tabButton" data-tab-section="tabSection2">IT 정보</div>
-            <div class="category tabButton" data-tab-section="tabSection3">지식공유방</div>
-            <div class="category tabButton" data-tab-section="tabSection4">스터디</div>
-          </nav>
-
-          <!-- 뉴스피드 자유게시판 리스트 -->
-          <section id="tabSection1" class="newspeed-box tabSection">
-            <h4 class="tabTitle">자유게시판</h4>
-            <div id="section1"></div>
-            <div class="newspeed">
-              <div class="newspeed-img">image</div>
-              <div class="newspeed-post">
-                <div class="post-info">
-                  <div class="user-id">작성자</div>
-                  <div class="createdAt">작성날짜</div>
-                </div>
-                <div class="title">제목</div>
-                <div class="content">내용</div>
-              </div>
-            </div>
-          </section>
-
-          <!-- 뉴스피드 IT 정보 리스트 -->
-          <section id="tabSection2" class="newspeed-box tabSection" hidden>
-            <h4 class="tabTitle">IT 정보</h4>
-            <div id="section2"></div>
-            <div class="newspeed">
-              <div class="newspeed-img">image</div>
-              <div class="newspeed-post">
-                <div class="post-info">
-                  <div class="user-id">작성자</div>
-                  <div class="createdAt">작성날짜</div>
-                </div>
-                <div class="title">제목</div>
-                <div class="content">내용</div>
-              </div>
-            </div>
-          </section>
-
-          <!-- 뉴스피드 지식공유방 리스트 -->
-          <section id="tabSection3" class="newspeed-box tabSection" hidden>
-            <h4 class="tabTitle">지식공유방</h4>
-            <div id="section3"></div>
-            <div class="newspeed">
-              <div class="newspeed-img">image</div>
-              <div class="newspeed-post">
-                <div class="post-info">
-                  <div class="user-id">작성자</div>
-                  <div class="createdAt">작성날짜</div>
-                </div>
-                <div class="title">제목</div>
-                <div class="content">내용</div>
-              </div>
-            </div>
-          </section>
-
-          <!-- 뉴스피드 스터디 리스트 -->
-          <section id="tabSection4" class="newspeed-box tabSection" hidden>
-            <h4 class="tabTitle">스터디</h4>
-            <div id="section4"></div>
-            <div class="newspeed">
-              <div class="newspeed-img">image</div>
-              <div class="newspeed-post">
-                <div class="post-info">
-                  <div class="user-id">작성자</div>
-                  <div class="createdAt">작성날짜</div>
-                </div>
-                <div class="title">제목</div>
-                <div class="content">내용</div>
-              </div>
-            </div>
-          </section>
-        </div>
-
-        <div class="right-board">
-          <!-- 인기글 top10 -->
-          <div class="hot-posts">인기글 TOP10</div>
-          <!-- 정모공지 -->
-          <div class="gathering-info">정모 소식</div>
+          <!-- <div class="bg-white p-4 shadow rounded">
+            <h2 class="text-lg font-semibold mb-4">인기글 TOP10</h2> -->
+          <!-- Placeholder for top posts content -->
+          <!-- </div> -->
         </div>
       </div>
     </div>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="pulic.index.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.slim.js" integrity="sha256-UgvvN8vBkgO0luPSUl2s8TIlOSYRoGFAX4jlCIm9Adc=" crossorigin="anonymous"></script>
+    <script>
+      const categoryMapping = {
+        자유게시판: 1,
+        "IT 정보": 2,
+        지식공유방: 3,
+        스터디: 4,
+      };
+
+      const headerTitle = document.querySelector(".col-span-2 h2");
+
+      document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll("nav a").forEach((link) => {
+          link.addEventListener("click", function (event) {
+            event.preventDefault();
+            const categoryName = this.textContent;
+            const category = categoryMapping[categoryName];
+            headerTitle.textContent = categoryName; // 페이지 상단 제목 업데이트
+            loadPosts(category);
+          });
+        });
+      });
+
+      // 서버로부터 데이터를 로드하는 함수
+      function loadPosts(category) {
+        axios
+          .get(`http://localhost:4000/api/posts?category=${category}`)
+          .then((response) => {
+            const posts = response.data.data;
+            displayPosts(posts); // 게시글을 표시하는 함수 호출
+          })
+          .catch((error) => console.error("Error fetching posts", error));
+      }
+
+      // 페이지에 게시글을 표시하는 함수
+      function displayPosts(posts) {
+        const postsContainer = document.getElementById("postsContainer");
+        postsContainer.innerHTML = ""; // 기존 내용을 지움
+
+        posts.forEach((userPosts) => {
+          userPosts.Posts.forEach((post, index) => {
+            const postElement = document.createElement("div");
+            postElement.classList.add("flex", "mb-4", "stats-card");
+
+            postElement.innerHTML = `
+        <div class="flex flex-col mx-0 px-0">
+        <div id="post-image-${index}" class="w-24 h-24 mr-4"></div>
+        <div class="mt-2 mr-4">
+          <button class="w-full mb-2 px-3 py-2 bg-blue-400 hover:bg-blue-500 text-white rounded block text-center transition duration-200">수정</button>
+          <button class="w-full mb-2 px-3 py-2 bg-blue-400 hover:bg-blue-500 text-white rounded block text-center transition duration-200">삭제</button>
+          <button class="w-full mb-2 px-3 py-2 bg-blue-400 hover:bg-blue-500 text-white rounded block text-center transition duration-200">팔로우</button>
+          <button class="w-full mb-2 px-3 py-2 bg-blue-400 hover:bg-blue-500 text-white rounded block text-center transition duration-200">언팔로우</button>
+          <button class="w-full mb-2 px-3 py-2 bg-blue-400 hover:bg-blue-500 text-white rounded block text-center transition duration-200">좋아요</button>
+          </div>
+
+        </div>
+        <div class="flex-1">
+          <div id="post-title-${index}" class="mb-2">${post.title}</div>
+          <div id="post-content-${index}">${post.content}</div>
+        </div>
+      `;
+
+            postsContainer.appendChild(postElement);
+
+            // 게시글 이미지에 스타일 적용
+            const postImage = postElement.querySelector(`#post-image-${index}`);
+            postImage.style.backgroundImage = `url(${userPosts.profilePictureUrl})`;
+            postImage.style.backgroundPosition = "center";
+            postImage.style.backgroundSize = "cover";
+            postImage.style.backgroundRepeat = "no-repeat";
+          });
+        });
+      }
+    </script>
   </body>
 </html>

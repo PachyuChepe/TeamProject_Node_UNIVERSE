@@ -1,38 +1,40 @@
 const passport = require("passport");
 const KakaoStrategy = require("passport-kakao").Strategy;
 const { User } = require("../sequelize/models"); // Sequelize User 모델 경로
-const jwt = require("jsonwebtoken");
+const { generateAccessToken, generateRefreshToken } = require("../utils/tokenManager.js");
 
 passport.use(
+  "kakao",
   new KakaoStrategy(
     {
       clientID: process.env.KAKAO_CLIENT_ID,
       callbackURL: "http://localhost:4000/api/kakao/callback",
     },
     async (accessToken, refreshToken, profile, done) => {
-      console.log(profile._json.kakao_account.email, "뭐들어옴");
       try {
         const exUser = await User.findOne({ where: { snsId: profile.id, provider: "kakao" } });
         if (exUser) {
           // JWT 토큰 생성
-          const token = jwt.sign({ id: exUser.id }, process.env.JWT_SECRET, { expiresIn: "12h" });
+          const accessToken = generateAccessToken(exUser.id);
+          const refreshToken = generateRefreshToken(exUser.id);
           // 기존 사용자에 대한 정보와 토큰 반환
-          return done(null, { user: exUser, token });
+          return done(null, { accessToken, refreshToken });
         } else {
           const newUser = await User.create({
             email: profile._json.kakao_account.email,
             username: profile.displayName,
             snsId: profile.id,
-            provider: profile.kakao,
+            provider: "kakao",
           });
           // JWT 토큰 생성
-          const token = jwt.sign({ id: newUser.id }, process.env.JWT_SECRET, { expiresIn: "12h" });
+          const accessToken = generateAccessToken(newUser.id);
+          const refreshToken = generateRefreshToken(newUser.id);
           // 새 사용자에 대한 정보와 토큰 반환
-          return done(null, { user: newUser, token });
+          return done(null, { accessToken, refreshToken });
         }
       } catch (error) {
         console.error(error);
-        done(error);
+        return done(error);
       }
     },
   ),

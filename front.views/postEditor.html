@@ -6,6 +6,7 @@
     <title>Quill Editor Example</title>
     <!-- Quill's CSS -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
       body {
         font-family: "Arial", sans-serif;
@@ -57,7 +58,8 @@
         margin-bottom: 20px;
       }
 
-      #sendButton {
+      #sendButton1,
+      #sendButton2 {
         flex: 0.5;
         height: 52px;
         padding: 10px 20px;
@@ -78,15 +80,15 @@
   <body>
     <div class="form-group">
       <select id="categorySelect">
-        <option value="1">카테고리1</option>
-        <option value="2">카테고리2</option>
-        <option value="3">카테고리3</option>
-        <option value="4">카테고리4</option>
-        <option value="5">카테고리5</option>
+        <option value="1">자유 게시판</option>
+        <option value="2">IT 정보</option>
+        <option value="3">지식공유방</option>
+        <option value="4">스터디</option>
       </select>
       <input type="text" id="postTitle" placeholder="제목을 입력하세요" />
       <!-- 데이터 전송 버튼 -->
-      <button id="sendButton">전송</button>
+      <button id="sendButton1" onclick="goBack()">취소</button>
+      <button id="sendButton2">전송</button>
     </div>
 
     <!-- Quill 에디터 컨테이너 -->
@@ -100,7 +102,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
       // Quill 에디터 설정
-      var quill = new Quill("#editor", {
+      let quill = new Quill("#editor", {
         modules: {
           toolbar: [
             [{ header: [1, 2, false] }],
@@ -121,31 +123,34 @@
         theme: "snow",
       });
 
-      // 데이터 전송 함수
       function sendData() {
-        var title = document.getElementById("postTitle").value;
-        console.log("타이틀", title);
-        var category = document.getElementById("categorySelect").value;
-        console.log("카테고리", category);
-        var content = quill.root.innerHTML;
-        console.log("히히 발싸", content);
+        let title = document.getElementById("postTitle").value;
+        let category = document.getElementById("categorySelect").value;
+        let content = quill.root.innerHTML;
 
-        // 서버로 데이터 전송
-        // axios
-        //   .post("your-server-endpoint", {
-        //     title: title,
-        //     category: category,
-        //     content: content,
-        //   })
-        //   .then(function (response) {
-        //     console.log("Response:", response);
-        //   })
-        //   .catch(function (error) {
-        //     console.log("Error:", error);
-        //   });
+        axios
+          .post("http://localhost:4000/api/post", {
+            categoryName: category,
+            title: title,
+            content: content,
+          })
+          .then(function (response) {
+            // 성공적인 응답 처리
+            alert(response.data.message);
+          })
+          .catch(function (error) {
+            // 오류 처리
+            // 오류 응답이 존재하면 그 메시지를 사용하고, 그렇지 않으면 기본 오류 메시지를 표시합니다.
+            let errorMessage = error.response && error.response.data ? error.response.data.message : "알 수 없는 오류가 발생했습니다.";
+            alert(errorMessage);
+          });
       }
 
-      document.getElementById("sendButton").addEventListener("click", sendData);
+      document.getElementById("sendButton2").addEventListener("click", sendData);
+
+      function goBack() {
+        window.location.href = "index.html";
+      }
     </script>
   </body>
 </html>
