@@ -10,7 +10,7 @@ passport.use(
     {
       clientID: process.env.NAVER_CLIENT_ID,
       clientSecret: process.env.NAVER_CLIENT_SECRET,
-      callbackURL: "/api/naver/callback",
+      callbackURL: "https://www.vitahub.site/api/naver/callback",
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
