@@ -68,12 +68,6 @@ const router = express.Router();
 // 회원가입
 router.post("/join", isNotLoggedIn, async (req, res) => {
   try {
-    // 이미 로그인을 한 경우 에러메세지 + 종료
-    if (res.locals.user) {
-      return res.status(400).send({
-        errorMessage: "이미 로그인된 유저입니다.",
-      });
-    }
     const { email, username, password } = req.body;
 
     // 이메일 검증식 : 소문자 a~z 와 숫자 0~9까지 + @ + 소문자 a~z + . + 소문자 a~z (2~3 자리)의 형태로 가능
