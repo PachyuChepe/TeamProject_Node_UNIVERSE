@@ -46,16 +46,9 @@ router.get("/posts/:postId/comments", async (req, res) => {
     return res.status(400).json({ success: false, message: "잘못된 유저 ID입니다." });
   }
 
-  // const sort = req.query.sort ? req.query.sort.toUpperCase() : "DESC";
-
-  // if (sort !== "ASC" && sort !== "DESC") {
-  //   return res.status(400).json({ success: false, message: "잘못된 정렬 방식입니다." });
-  // }
-
   try {
     const getComment = await User.findAll({
       attributes: ["username"],
-      // order: [[{ model: Comment }, "createdAt", sort]],
       include: [
         {
           model: Comment,

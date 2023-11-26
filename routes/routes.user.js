@@ -2,7 +2,6 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const { User, Post, Follow } = require("../sequelize/models/index.js");
 const { mailVerify } = require("../middleware/middleware.Nodemailer.js");
 const passport = require("passport");
