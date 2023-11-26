@@ -49,14 +49,14 @@ module.exports = (sequelize, DataTypes) => {
       },
       profilePictureUrl: {
         type: DataTypes.TEXT,
-        defaultValue: "../../front.public/image/Default-Profile-Image.png",
+        defaultValue: "https://blog.kakaocdn.net/dn/bmSKig/btsAUKUIbIH/6tC2ekqFZRELEBZxijKa6K/img.png",
       },
       // // ============ 효진님 코드
       provider: {
-        type: DataTypes.ENUM("naver", "kakao"),
+        type: DataTypes.ENUM("local", "kakao", "naver"),
       },
       snsId: {
-        type: DataTypes.STRING(30),
+        type: DataTypes.STRING,
       },
     },
     {

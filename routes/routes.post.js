@@ -9,7 +9,7 @@ const { isLoggedIn } = require("../middleware/middleware.verifyToken.js");
 // Create (게시글 등록)
 router.post("/post", isLoggedIn, async (req, res) => {
   const { id } = res.locals.user;
-  const { categoryName, title, content, multimediaUrl } = req.body;
+  const { categoryName, title, content } = req.body;
 
   try {
     if (!categoryName || !title || !content) {
@@ -21,7 +21,6 @@ router.post("/post", isLoggedIn, async (req, res) => {
       title,
       content,
       userId: id,
-      multimediaUrl,
     });
 
     if (!newPost) {
@@ -31,26 +30,23 @@ router.post("/post", isLoggedIn, async (req, res) => {
     return res.status(201).json({ success: true, message: "게시글을 등록하였습니다.", data: newPost });
   } catch (err) {
     // console.error("무슨 에러임?", err);
-    return res.status(500).json({ success: false, message: "게시글 등록에 실패하였습니다." });
+    return res.status(500).json({ success: false, message: "용량이 너무 큽니다! 사진 업로드 기능은 베타버전 입니다." });
   }
 });
 
 // Read (게시글 목록 조회 - 뉴스피드)
 router.get("/posts", async (req, res) => {
-  // const sort = req.query.sort ? req.query.sort.toUpperCase() : "DESC";
-
-  // if (sort !== "ASC" && sort !== "DESC") {
-  //   return res.status(400).json({ success: false, message: "잘못된 정렬 방식입니다." });
-  // }
+  const category = req.query.category; // 카테고리 쿼리 파라미터
 
   try {
+    // 쿼리에 카테고리 필터링 조건 추가
     const getPost = await User.findAll({
-      attributes: ["username"],
-      // order: [[{ model: Post }, "createdAt", sort]],
+      attributes: ["username", "profilePictureUrl"],
       include: [
         {
           model: Post,
-          attributes: ["id", "categoryName", "title", "content", "multimediaUrl", "createdAt"],
+          attributes: ["id", "categoryName", "title", "content", "createdAt"],
+          where: category ? { categoryName: category } : { categoryName: "1" }, // 카테고리 필터
         },
       ],
     });
