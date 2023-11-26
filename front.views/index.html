@@ -148,7 +148,7 @@
       // 서버로부터 데이터를 로드하는 함수
       function loadPosts(category) {
         axios
-          .get(`http://localhost:4000/api/posts?category=${category}`)
+          .get(`/api/posts?category=${category}`)
           .then((response) => {
             const posts = response.data.data;
             displayPosts(posts); // 게시글을 표시하는 함수 호출

@@ -8,7 +8,7 @@ passport.use(
   new KakaoStrategy(
     {
       clientID: process.env.KAKAO_CLIENT_ID,
-      callbackURL: "http://localhost:4000/api/kakao/callback",
+      callbackURL: `${process.env.SERVER_URL}/api/kakao/callback`,
     },
     async (accessToken, refreshToken, profile, done) => {
       try {

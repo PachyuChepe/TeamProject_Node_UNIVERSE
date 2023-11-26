@@ -1,6 +1,5 @@
-axios.defaults.withCredentials = true;
-
 // 로그인
+axios.defaults.withCredentials = true;
 document.getElementById("loginForm").addEventListener("submit", function (event) {
   event.preventDefault();
 
@@ -9,7 +8,7 @@ document.getElementById("loginForm").addEventListener("submit", function (event)
   let password = document.getElementById("password").value;
 
   axios
-    .post("http://localhost:4000/api/login", { email: email, password: password })
+    .post("/api/login", { email: email, password: password })
     .then(function (response) {
       // 성공 메시지 알림
       alert(response.data.message);
@@ -31,7 +30,7 @@ document.getElementById("loginForm").addEventListener("submit", function (event)
 // 로그아웃
 document.getElementById("logoutButton").addEventListener("click", function () {
   axios
-    .post("http://localhost:4000/api/logout")
+    .post("/api/logout")
     .then(function (response) {
       // 성공 메시지 알림
       alert(response.data.message);
@@ -71,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // 로그인 상태를 확인하고 사용자 정보를 UI에 업데이트하는 함수
 function checkLoginStatusAndUpdateUI() {
   axios
-    .get("http://localhost:4000/api/user/me")
+    .get("/api/user/me")
     .then((response) => {
       const { success, data } = response.data;
 

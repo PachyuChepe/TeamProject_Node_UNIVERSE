@@ -8,7 +8,7 @@ const path = require("path");
 const https = require("https");
 const fs = require("fs");
 const logger = require("./config/winston.config.js");
-
+require("dotenv").config();
 const dbConfig = require("./config/db.config.js");
 const conn = dbConfig.init();
 dbConfig.connect(conn);

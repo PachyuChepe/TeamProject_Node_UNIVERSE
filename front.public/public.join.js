@@ -1,5 +1,5 @@
-axios.defaults.withCredentials = true;
 // 회원 가입
+axios.defaults.withCredentials = true;
 document.querySelector(".profile-card form").addEventListener("submit", function (event) {
   event.preventDefault(); // 기본 제출 이벤트 방지
 
@@ -11,7 +11,7 @@ document.querySelector(".profile-card form").addEventListener("submit", function
 
   // axios를 사용하여 서버로 전송
   axios
-    .post("http://localhost:4000/api/join", {
+    .post("/api/join", {
       email: email,
       password: password,
       confirmPassword: confirmPassword,
@@ -34,7 +34,3 @@ document.querySelector(".profile-card form").addEventListener("submit", function
       }
     });
 });
-
-function goBack() {
-  window.location.href = "index.html";
-}
