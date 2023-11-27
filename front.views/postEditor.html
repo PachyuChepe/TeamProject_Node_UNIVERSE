@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quill Editor Example</title>
+    <!-- Quill's JS -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Quill's CSS -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
+    <script type="module" defer src="public.postEditor.js"></script>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        padding: 200px;
+        margin-top: -50px;
+      }
+
+      .form-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      #categorySelect {
+        flex: 1;
+        height: 50px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 5px 10px;
+        font-size: 16px;
+        color: #333;
+        background-color: #fff;
+      }
+
+      #postTitle {
+        flex: 10;
+        height: 40px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 5px 10px;
+        font-size: 16px;
+        color: #333;
+        background-color: #fff;
+      }
+
+      #categorySelect:hover,
+      #postTitle:hover {
+        border-color: #4caf50;
+      }
+
+      #categorySelect:focus,
+      #postTitle:focus {
+        border-color: #4caf50;
+        outline: none;
+      }
+
+      #editor-container {
+        margin-bottom: 20px;
+      }
+
+      #sendButton1,
+      #sendButton2 {
+        flex: 0.5;
+        height: 52px;
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      #sendButton:hover {
+        background-color: #45a049;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="form-group">
+      <select id="categorySelect">
+        <option value="1">자유 게시판</option>
+        <option value="2">IT 정보</option>
+        <option value="3">지식공유방</option>
+        <option value="4">스터디</option>
+      </select>
+      <input type="text" id="postTitle" placeholder="제목을 입력하세요" />
+      <!-- 데이터 전송 버튼 -->
+      <button id="sendButton1" onclick="goBack()">취소</button>
+      <button id="sendButton2">전송</button>
+    </div>
+
+    <!-- Quill 에디터 컨테이너 -->
+    <div id="editor-container">
+      <div id="editor"></div>
+    </div>
+
+    <script>
+      function goBack() {
+        window.location.href = "index.html";
+      }
+    </script>
+  </body>
+</html>

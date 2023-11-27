@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile Settings</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="module" defer src="public.profile.js"></script>
+    <link rel="stylesheet" href="front.profile.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="profile-card">
+        <div class="flex flex-row">
+          <!-- Profile Image and Upload Button Section -->
+          <div class="sidebar flex flex-col items-center">
+            <div class="profile-image" id="profileImagePreview"></div>
+            <!-- Image Upload Input -->
+            <input type="file" id="imageUpload" accept="image/*" style="display: none" />
+            <button class="button" onclick="document.getElementById('imageUpload').click()">Upload New Picture</button>
+          </div>
+
+          <!-- Information Input Section -->
+          <div class="main-content">
+            <form>
+              <!-- Name Input -->
+              <div>
+                <label for="name" class="label">Name</label>
+                <input type="text" id="name" class="input" />
+              </div>
+
+              <!-- Email Input -->
+              <div>
+                <label for="profileDescription" class="label">profileDescription</label>
+                <input type="text" id="profileDescription" class="input" />
+              </div>
+
+              <!-- Current Password Input -->
+              <div>
+                <label for="currentPassword" class="label">Current Password</label>
+                <input type="password" id="currentPassword" class="input" />
+                <!-- <span id="currentPasswordInfo"></span> -->
+              </div>
+
+              <!-- New Password Input -->
+              <div>
+                <label for="newPassword" class="label">New Password</label>
+                <input type="password" id="newPassword" class="input" />
+                <!-- <span id="newPasswordInfo"></span> -->
+              </div>
+
+              <!-- Submit Button -->
+              <button class="button" type="button" onclick="goBack()">back</button>
+              <button class="button" type="submit">Save Changes</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      function goBack() {
+        window.location.href = "index.html";
+      }
+    </script>
+  </body>
+</html>

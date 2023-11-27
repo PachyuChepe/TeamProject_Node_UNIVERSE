@@ -1,0 +1,38 @@
+body {
+  font-family: "Noto Sans KR", sans-serif;
+}
+.profile-image {
+  background-color: #d1d5db;
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto;
+}
+.stats-card {
+  background-color: #f9fafb;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+.stats-item {
+  display: inline-block;
+  margin-right: 1rem;
+}
+.stats-item:last-child {
+  margin-right: 0;
+}
+.stats-item label {
+  display: block;
+  text-align: center;
+  font-weight: bold;
+}
+.stats-item span {
+  display: block;
+  text-align: center;
+}
+
+#loginSection {
+  display: none;
+}

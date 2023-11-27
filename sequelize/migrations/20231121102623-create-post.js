@@ -25,10 +25,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       content: {
-        type: Sequelize.TEXT,
-      },
-      multimediaUrl: {
-        type: Sequelize.TEXT,
+        type: Sequelize.TEXT("long"),
       },
       createdAt: {
         allowNull: false,

@@ -33,8 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       categoryName: DataTypes.STRING,
       title: DataTypes.STRING,
-      content: DataTypes.TEXT,
-      multimediaUrl: DataTypes.TEXT,
+      content: DataTypes.TEXT("long"),
     },
     {
       sequelize,

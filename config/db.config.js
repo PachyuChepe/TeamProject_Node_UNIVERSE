@@ -16,7 +16,6 @@ module.exports = {
   //   dialect: "mysql",
   //   logging: false, //콘솔창 쿼리 로그 off
   // },
-
   development: {
     host: process.env.RDS_MYSQL_HOST,
     port: process.env.RDS_MYSQL_PORT,
