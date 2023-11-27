@@ -123,7 +123,7 @@ router.get("/user/me", isLoggedIn, async (req, res) => {
     });
   } catch (error) {
     // 서버 오류 처리
-    console.log(error);
+    // console.log(error);
     res.status(500).json({ success: false, message: "서버 오류가 발생했습니다." });
   }
 });
@@ -282,7 +282,7 @@ router.get("/checkAuth", isLoggedIn, async (req, res) => {
 router.get("/user/:userId", async (req, res) => {
   const { userId } = req.params; // URL에서 게시글 ID 추출
   const user = await User.findOne({ id: userId });
-  console.log(user.id);
+  // console.log(user.id);
   const { id, username, email, profilePictureUrl } = user;
   res.send({ id, username, email, profilePictureUrl });
 });
