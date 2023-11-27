@@ -29,17 +29,20 @@ let postId = queryParams.id;
 async function getPost() {
   try {
     // 게시글 정보
-    console.log(postId);
+    // console.log(postId);
     const postResponse = await axios.get(`/api/post/${postId}`);
+    // console.log("뭔데뭔데", postResponse.data.data.User);
     // 로그인한 회원 정보
     const userInfo = await axios.get(`/api/user/me`);
     const writerInfo = await axios.get(`/api/user/${postId.userId}`);
     const user = userInfo.data.data.userProfile;
-    const writer = writerInfo.data;
+
+    const writer = postResponse.data.data.User;
+
     const userEmail = user.email;
+
     const writerEmail = writer.email;
-    console.log("아이디", user);
-    console.log("작성자", writerEmail);
+
     const post = postResponse.data.data;
 
     // 게시글 정보
