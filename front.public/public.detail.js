@@ -35,9 +35,9 @@ async function getPost() {
     // 로그인한 회원 정보
     const userInfo = await axios.get(`/api/user/me`);
     const writerInfo = await axios.get(`/api/user/${postId.userId}`);
-    const user = userInfo.data.data.userProfile;
+    const user = postResponse.data.data.User;
 
-    const writer = postResponse.data.data.User;
+    const writer = userInfo.data.data.userProfile;
 
     const userEmail = user.email;
 
