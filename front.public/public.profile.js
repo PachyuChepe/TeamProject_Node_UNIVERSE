@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 서버로 전송
     axios
-      .put("http://localhost:4000/api/user/me", formData, {
+      .put("/api/user/me", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
