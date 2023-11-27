@@ -1,77 +1,86 @@
-// axios 전역 설정
-axios.defaults.withCredentials = true; // withCredentials 전역 설정
+const categoryMapping = {
+  자유게시판: 1,
+  "IT 정보": 2,
+  지식공유방: 3,
+  스터디: 4,
+};
 
-// 쿠키 삭제 (로그아웃 기능)
-function deleteCookie(name) {
-  document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-}
+const headerTitle = document.querySelector(".col-span-2 h2");
 
-// 사용자 정보 화면 (로그인 시에만 보여짐)
-async function getUser() {
-  const res = await axios.get("/api/users/me");
-  const data = res.data; // userInfo
-  const user = data.userInfo;
-  document.getElementsByClassName("profile-img");
-  document.getElementById("username").innerHTML = user.username ? user.username : "사용자";
-  document.getElementById("useremail").innerHTML = user.email ? user.email : "이메일이 없습니다.";
-  document.getElementById("following").innerHTML = user.following ? user.following : "0";
-  document.getElementById("follower").innerHTML = user.follower ? user.follower : "0";
-}
-
-// 카테고리별 탭이동
-const $nav = document.querySelector("#tabButtonNav");
-const $sections = document.querySelectorAll(".tabSection");
-
-$nav.addEventListener("click", (e) => {
-  if (!e.target.classList.contains("tabButton")) {
-    return;
-  }
-
-  const focusedTabId = e.target.dataset.tabSection;
-
-  // 탭을 누르면 태그의 hidden 속성이 지워지며 해당 탭이 화면이 보여지고 나머지 탭의 화면들이 가려지게 구현함
-  $sections.forEach(($section) => {
-    if ($section.id === focusedTabId) {
-      $section.removeAttribute("hidden");
-    } else {
-      $section.setAttribute("hidden", true);
-    }
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("nav a").forEach((link) => {
+    link.addEventListener("click", function (event) {
+      event.preventDefault();
+      const categoryName = this.textContent;
+      const category = categoryMapping[categoryName];
+      headerTitle.textContent = categoryName; // 페이지 상단 제목 업데이트
+      loadPosts(category);
+    });
   });
 });
 
-// 로그인 여부에 따른 사용자정보 화면 or 로그인 안된 화면 뜨게
-if (document.cookie) {
-  document.getElementById("auth-form").style.display = "none";
-  document.getElementById("user-info").style.display = "block";
-  getUser();
-} else {
-  document.getElementById("user-info").style.display = "none";
-  document.getElementById("auth-form").style.display = "block";
+// 서버로부터 데이터를 로드하는 함수
+function loadPosts(category) {
+  axios
+    .get(`/api/posts?category=${category}`)
+    .then((response) => {
+      const posts = response.data.data[0].Posts;
+      console.log(posts);
+      displayPosts(posts); // 게시글을 표시하는 함수 호출
+
+      // 포스트 클릭 시 해당 페이지로 이동
+      const postLinks = document.querySelectorAll(".post");
+      postLinks.forEach(function (postLink) {
+        postLink.addEventListener("click", function (event) {
+          event.preventDefault();
+
+          // 클릭된 게시물의 ID 가져오기
+          var postId = postLink.getAttribute("data-post-id");
+
+          // 상세페이지로 이동
+          window.location.href = "detail.html?id=" + postId;
+        });
+      });
+    })
+    .catch((error) => console.error("Error fetching posts", error));
 }
 
-// 로그인
-document.getElementById("login-btn").addEventListener("click", async () => {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  console.log(email, password);
+// 페이지에 게시글을 표시하는 함수
+function displayPosts(posts) {
+  const postsContainer = document.getElementById("postsContainer");
+  postsContainer.innerHTML = ""; // 기존 내용을 지움
 
-  try {
-    const login = await axios.post("/api/login", { email, password });
-    if (!login) {
-      return alert("로그인에 실패했습니다. 이메일과 비밀번호를 다시 확인해주세요.");
-    }
-    if (!email || !password) {
-      return alert("이메일과 패스워드를 모두 입력해주세요.");
-    }
-    location.reload();
-    alert("로그인 되었습니다.");
-  } catch (err) {
-    console.error(err);
-  }
-});
+  posts.forEach((userPosts) => {
+    userPosts.Posts.forEach((post) => {
+      const postElement = document.createElement("div");
+      postElement.classList.add("flex", "mb-4", "stats-card");
 
-// 로그아웃
-document.getElementById("logout-btn").addEventListener("click", async () => {
-  deleteCookie("connect.sid");
-  location.reload();
-});
+      postElement.innerHTML = `
+  <div class="post flex flex-col mx-0 px-0" data-post-id="${posts.id}">
+  <div id="post-image-${posts.id}" class="w-24 h-24 mr-4"></div>
+  <div class="mt-2 mr-4">
+    <button class="w-full mb-2 px-3 py-2 bg-blue-400 hover:bg-blue-500 text-white rounded block text-center transition duration-200">수정</button>
+    <button class="w-full mb-2 px-3 py-2 bg-blue-400 hover:bg-blue-500 text-white rounded block text-center transition duration-200">삭제</button>
+    <button class="w-full mb-2 px-3 py-2 bg-blue-400 hover:bg-blue-500 text-white rounded block text-center transition duration-200">팔로우</button>
+    <button class="w-full mb-2 px-3 py-2 bg-blue-400 hover:bg-blue-500 text-white rounded block text-center transition duration-200">언팔로우</button>
+    <button class="w-full mb-2 px-3 py-2 bg-blue-400 hover:bg-blue-500 text-white rounded block text-center transition duration-200">좋아요</button>
+    </div>
+
+  </div>
+  <div class="flex-1">
+    <div id="post-title-${index}" class="mb-2">${post.title}</div>
+    <div id="post-content-${index}">${post.content}</div>
+  </div>
+`;
+
+      postsContainer.appendChild(postElement);
+
+      // 게시글 이미지에 스타일 적용
+      const postImage = postElement.querySelector(`#post-image-${index}`);
+      postImage.style.backgroundImage = `url(${userPosts.profilePictureUrl})`;
+      postImage.style.backgroundPosition = "center";
+      postImage.style.backgroundSize = "cover";
+      postImage.style.backgroundRepeat = "no-repeat";
+    });
+  });
+}
