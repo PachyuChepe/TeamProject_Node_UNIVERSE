@@ -55,9 +55,9 @@ router.get("/posts", async (req, res) => {
     });
 
     // 조회된 게시글이 없을 경우 처리
-    if (getPost.length === 0) {
-      return res.status(404).send({ success: false, message: "게시글이 존재하지 않습니다." });
-    }
+    // if (getPost.length === 0) {
+    //   return res.status(404).send({ success: false, message: "게시글이 존재하지 않습니다." });
+    // }
 
     // 게시글 목록 조회 성공 응답
     return res.status(200).json({ success: true, data: getPost });
@@ -71,10 +71,10 @@ router.get("/posts", async (req, res) => {
 router.get("/post/:postId", async (req, res) => {
   const { postId } = req.params; // URL에서 게시글 ID 추출
 
-  // 게시글 ID가 숫자가 아닌 경우 오류 반환
-  if (isNaN(postId)) {
-    return res.status(400).json({ success: false, message: "잘못된 게시글 ID입니다." });
-  }
+  // // 게시글 ID가 숫자가 아닌 경우 오류 반환
+  // if (isNaN(postId)) {
+  //   return res.status(400).json({ success: false, message: "잘못된 게시글 ID입니다." });
+  // }
 
   try {
     // 게시글 상세 정보 조회
@@ -116,7 +116,7 @@ router.put("/post/:postId", isLoggedIn, async (req, res) => {
     const updatePost = await Post.update({ categoryName, title, content, multimediaUrl }, { where: { id: postId, userId: id } });
 
     // 게시글이 존재하지 않거나 수정이 불가능한 경우 처리
-    if (updatePost[0] === 0) {
+    if (updatePost.size === 0) {
       return res.status(404).json({ success: false, message: "게시글이 존재하지 않습니다." });
     }
 

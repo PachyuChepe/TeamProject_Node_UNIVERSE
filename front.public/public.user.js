@@ -1,3 +1,5 @@
+
+
 // 로그인
 axios.defaults.withCredentials = true;
 document.getElementById("loginForm").addEventListener("submit", function (event) {
@@ -97,7 +99,6 @@ function checkLoginStatusAndUpdateUI() {
 
 // 사용자 정보를 UI에 반영하는 함수
 function updateUserInfo(userData) {
-  console.log(userData.userProfile.profilePictureUrl, "유저데이따?");
   // 프로필 사진 업데이트
   if (userData.userProfile.profilePictureUrl) {
     let profileImage = document.querySelector(".profile-image");
@@ -120,3 +121,4 @@ function updateUserInfo(userData) {
 document.addEventListener("DOMContentLoaded", function () {
   checkLoginStatusAndUpdateUI();
 });
+

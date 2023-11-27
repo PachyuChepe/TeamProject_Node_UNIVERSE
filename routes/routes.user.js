@@ -278,4 +278,12 @@ router.get("/checkAuth", isLoggedIn, async (req, res) => {
   });
 });
 
+// 사용자 조회
+router.get("/user/:userId", async (req, res) => {
+  const { userId } = req.params; // URL에서 게시글 ID 추출
+  const user = await User.findOne({ id: userId });
+  console.log(user.id);
+  const { id, username, email, profilePictureUrl } = user;
+  res.send({ id, username, email, profilePictureUrl });
+});
 module.exports = router;

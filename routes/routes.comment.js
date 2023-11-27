@@ -66,7 +66,7 @@ router.get("/posts/:postId/comments", async (req, res) => {
     });
 
     // 댓글이 없는 경우 404 오류 반환
-    if (getComment.length === 0) {
+    if (getComment.size === 0) {
       return res.status(404).send({ success: false, message: "댓글이 존재하지 않습니다." });
     }
 
