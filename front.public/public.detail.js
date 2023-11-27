@@ -113,7 +113,7 @@ async function getPost() {
         // if (check === "Y".toLowerCase() || check !== "N".toLowerCase()) {
         //   return alert("삭제를 취소하셨습니다. ");
         // }
-        axios.delete("/api/post/:postId");
+        axios.delete(`/api/post/${postId}`);
         alert("삭제 완료!");
         window.location.href = "index.html";
       } catch (error) {
