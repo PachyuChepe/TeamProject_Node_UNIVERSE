@@ -37,7 +37,6 @@ router.post("/post", isLoggedIn, async (req, res) => {
     return res.status(500).json({ success: false, message: "용량이 너무 큽니다! 사진 업로드 기능은 베타버전 입니다." });
   }
 });
-
 // 뉴스피드 게시글 목록 조회
 router.get("/posts", async (req, res) => {
   const category = req.query.category; // 쿼리 파라미터에서 카테고리 추출
@@ -45,7 +44,14 @@ router.get("/posts", async (req, res) => {
   try {
     // 게시글 목록 조회
     const getPost = await User.findAll({
-      // 중략: 게시글 목록 조회 로직
+      attributes: ["id", "username", "profilePictureUrl"],
+      include: [
+        {
+          model: Post,
+          attributes: ["id", "categoryName", "title", "content", "createdAt"],
+          where: category ? { categoryName: category } : { categoryName: "1" }, // 카테고리 필터
+        },
+      ],
     });
 
     // 조회된 게시글이 없을 경우 처리
