@@ -79,7 +79,17 @@ router.get("/post/:postId", async (req, res) => {
   try {
     // 게시글 상세 정보 조회
     const getPost = await Post.findOne({
-      // 중략: 특정 게시글 조회 로직
+      attributes: ["id", "categoryName", "title", "content", "createdAt"],
+      where: { id: postId },
+      include: [
+        {
+          model: User,
+          // attributes: ["username"],
+          where: {
+            id: Sequelize.col("Post.userId"),
+          },
+        },
+      ],
     });
 
     // 게시글이 존재하지 않을 경우 처리
